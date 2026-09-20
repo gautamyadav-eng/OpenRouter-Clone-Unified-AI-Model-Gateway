@@ -1,0 +1,10 @@
+//User ka prompt receive karne aur AI response ke liye request bhejne wala route.
+
+import express from "express";
+import chatControllers from "../controllers/chatControllers.js";
+import apiKeyMiddleware from "../middleware/apiKeyMiddleware.js";
+
+const router = express();
+router.post("/",apiKeyMiddleware,    chatControllers);
+
+export default router;
