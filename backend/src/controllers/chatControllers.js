@@ -1,5 +1,6 @@
 
 const chatControllers = (req, res) => {
+    console.log(req.apiKey);
     const {prompt, model} = req.body;
 
     if(!prompt || !model){

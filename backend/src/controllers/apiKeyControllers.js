@@ -21,6 +21,7 @@ const createApiKey = async(req,res) => {
             name,
             keyHash,
         });
+        console.log("Generated key hash:", keyHash);
 
         res.status(201).json({
             success:true,

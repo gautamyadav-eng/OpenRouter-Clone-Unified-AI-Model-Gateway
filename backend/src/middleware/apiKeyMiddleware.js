@@ -1,4 +1,7 @@
-const apiKeyMiddleware = (req, res, next) => {
+import { hashApiKey } from "../utils/apiKeyUtils.js";
+import ApiKey from "../models/ApiKey.js";
+
+const apiKeyMiddleware =async (req, res, next) => {
     const authHeader = req.headers.authorization;
 
     if(!authHeader){
@@ -17,8 +20,28 @@ const apiKeyMiddleware = (req, res, next) => {
 
     const apiKey = parts[1];
 
-    console.log("Api key recevide", Boolean(apiKey));
+    const keyHash = hashApiKey(apiKey);
 
+    const apiKeyData = await ApiKey.findOne({keyHash});
+
+    
+if(!apiKeyData){
+        return res.status(401).json({
+            success: false,
+            message:"Invaild API key"
+        });
+    }
+
+    if(!apiKeyData.isActive){
+        return res.status(401).json({
+            success:false,
+            message:"API key is inActive"
+        });
+    }
+
+    req.apiKey = apiKeyData;
+
+    
    next();
 }
 export default apiKeyMiddleware;
