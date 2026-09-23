@@ -1,8 +1,8 @@
 import express from "express";
+import availableModels from "../config/modelConfig.js";
 
 const router = express.Router();
 
-const availableModels = ["GPT","Claude","Gemini"];
 
 router.get("/", (req, res) => {
 
