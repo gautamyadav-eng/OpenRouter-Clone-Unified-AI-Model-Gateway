@@ -1,6 +1,6 @@
 import availableModels from "../config/modelConfig.js";
 import callProvider from "../services/aiProviderServices.js";
-const chatControllers = (req, res) => {
+const chatControllers =async (req, res) => {
     console.log(req.apiKey);
     const {prompt, model} = req.body;
 
@@ -19,7 +19,8 @@ const chatControllers = (req, res) => {
             message:"Invaild model selected"
         });
     }
-   const result =  callProvider(selectedModel.provider, selectedModel.modelId, prompt);
+    try{
+   const result = await callProvider(selectedModel.provider, selectedModel.modelId, prompt);
    
 
     res.status(200).json({
@@ -27,6 +28,14 @@ const chatControllers = (req, res) => {
         message:"chat request recevied successfully",
         data: result
     });
+
+}catch(error){
+    console.log("Ai provider error", error.message);
+    return res.status(error.status || 500).json({
+        success:false,
+        message:"AI provider reqest failed"
+    })
+}
 };
 
 export default chatControllers;

@@ -2,17 +2,17 @@ const availableModels = [
     {
         name:"GPT",
         provider:"OpenAI",
-        modelId: "gpt-demo"
+        modelId:"gpt-5.6-luna"
     },
     {
         name:"Claude",
         provider:"ClaudeAI",
-        modelId:"claude demo"
+        modelId:"claude-sonnet-5"
     },
     {
       name:"Gemini",
         provider:"GeminiAI",
-        modelId:"gemini demo"  
+        modelId:"gemini-3.8-flash" 
     }
 ];
 export default availableModels;
