@@ -4,12 +4,13 @@ import { randomSecretKey, hashApiKey } from "../utils/apiKeyUtils.js";
 
 const createApiKey = async(req,res) => {
     try{
-        const {userId, name} = req.body;
+        const { name} = req.body;
+        const userId = req.user.userId;
 
-        if(!userId || !name){
+        if(!name){
             return res.status(400).json({
                 success: false,
-                message:"userId or name are required"
+                message:" API key name is required"
             });
         }
 
