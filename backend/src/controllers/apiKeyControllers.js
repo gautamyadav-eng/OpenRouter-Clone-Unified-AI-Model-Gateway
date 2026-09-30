@@ -39,4 +39,61 @@ const createApiKey = async(req,res) => {
     }
 }
 
+const getApiKey = async(req, res) => {
+    try{
+    const userId = req.user.userId;
+
+    const userKey = await ApiKey.find({userId});
+    if(userKey.length == 0){
+        return res.status(404).json({
+            success:false,
+            message:"no api key found"
+        });
+    }
+    return res.status(200).json({
+        success :true,
+        message:"Api key successfully fatch",
+        apiKey : userKey
+    });
+}catch(error){
+    console.log("api key error", error.message);
+    return res.status(500).json({
+        success:false,
+        message:"Internal server error"
+    });
+}
+}
+
+const deactivateApiKey = async(req, res) => {
+    try{
+        const userId = req.user.userId;
+        const {id} = req.params;
+
+        const apiKey = await ApiKey.findOne({ 
+            _id:id, 
+            userId: userId
+        });
+        if(!apiKey){
+            return res.status(404).json({
+                success:false,
+                message:"api key not found"
+            });
+        }
+
+        apiKey.isActive = false;
+        await apiKey.save();
+
+        return res.status(200).json({
+            success:true,
+            message: "API key deactivated successfully"
+        });
+    }catch(error){
+        console.log("api key deactivate error", error.message);
+        return res.status(500).json({
+            success:false,
+            message:"Internal server error"
+        });
+    }
+}
 export default createApiKey;
+export {getApiKey, deactivateApiKey};

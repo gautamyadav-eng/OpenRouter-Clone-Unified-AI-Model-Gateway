@@ -14,7 +14,7 @@ const apiKeyMiddleware =async (req, res, next) => {
     if(parts.length !== 2 || parts[0] !== "Bearer" || !parts[1] ){
         return res.status(401).json({
             success: false,
-            message:"Invalid authorization format. use Bearer<API_KEY>"
+            message:"Invalid authorization format. Use Bearer <API_KEY>"
         });
     }
 
@@ -28,7 +28,7 @@ const apiKeyMiddleware =async (req, res, next) => {
 if(!apiKeyData){
         return res.status(401).json({
             success: false,
-            message:"Invaild API key"
+            message:"Invalid API key"
         });
     }
 
