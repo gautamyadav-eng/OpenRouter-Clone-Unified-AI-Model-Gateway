@@ -1,11 +1,12 @@
 import express from "express"
-import {registerUser,loginUsers} from "../controllers/RegisterControllers.js";
+import {registerUser,loginUsers,forgotPassword} from "../controllers/RegisterControllers.js";
 import tokenMiddleware from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
 router.post("/register", registerUser);
 router.post("/login", loginUsers);
+router.post("/forgot-password", forgotPassword)
 
 router.get("/profile",tokenMiddleware, (req,res) =>{
     res.status(200).json({

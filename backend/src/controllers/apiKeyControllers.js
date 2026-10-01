@@ -22,7 +22,7 @@ const createApiKey = async(req,res) => {
             name,
             keyHash,
         });
-        console.log("Generated key hash:", keyHash);
+       
 
         res.status(201).json({
             success:true,
@@ -31,7 +31,7 @@ const createApiKey = async(req,res) => {
         });
 
     }catch(error){
-        console.log("api key creation error", error);
+        console.log("api key creation error", error.message);
         res.status(500).json({
             success:false,
             message : "server error"
@@ -43,7 +43,13 @@ const getApiKey = async(req, res) => {
     try{
     const userId = req.user.userId;
 
-    const userKey = await ApiKey.find({userId});
+    const userKey = await ApiKey.find(
+        {userId},
+        {
+            keyHash : 0,
+            userId : 0
+        }
+    );
     if(userKey.length == 0){
         return res.status(404).json({
             success:false,
@@ -52,8 +58,8 @@ const getApiKey = async(req, res) => {
     }
     return res.status(200).json({
         success :true,
-        message:"Api key successfully fatch",
-        apiKey : userKey
+        message:"API keys fetched successfully",
+        apiKeys : userKey
     });
 }catch(error){
     console.log("api key error", error.message);
@@ -69,6 +75,12 @@ const deactivateApiKey = async(req, res) => {
         const userId = req.user.userId;
         const {id} = req.params;
 
+        if(!id){
+            return res.status(400).json({
+                success:false,
+                message:"API key ID is required"
+            });
+        }
         const apiKey = await ApiKey.findOne({ 
             _id:id, 
             userId: userId
@@ -77,6 +89,13 @@ const deactivateApiKey = async(req, res) => {
             return res.status(404).json({
                 success:false,
                 message:"api key not found"
+            });
+        }
+
+        if(!apiKey.isActive){
+            return res.status(400).json({
+                success:false,
+                message:"API key is already inactive"
             });
         }
 

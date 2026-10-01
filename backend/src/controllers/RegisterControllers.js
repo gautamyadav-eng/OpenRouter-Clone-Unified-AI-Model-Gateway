@@ -1,5 +1,8 @@
 import Users from "../models/Users.js";
-import bcrypt from "bcrypt"
+import crypto from "crypto";
+import bcrypt from "bcrypt";
+import passwordReset from "../models/passwordReset.js";
+import { sendOtpEmail } from "../utils/emailUtils.js";
 import jwt from "jsonwebtoken";
 
 
@@ -84,3 +87,47 @@ export const loginUsers = async (req, res) =>{
         });
     }
 };
+
+export const forgotPassword = async(req,res) => {
+    try {
+        const {email} = req.body;
+        if(!email){
+            return res.status(400).json({
+                success:true,
+                message:"email is required"
+            });
+        }
+
+        const user = await Users.findOne({email});
+        if(!user){
+            return res.status(404).json({
+                success:false,
+                message:"User not found"
+            });
+        }
+        const otp = crypto.randomInt(100000,1000000).toString();
+        const otpHash = await bcrypt.hash(otp, 10);
+        await passwordReset.deleteMany({
+            userId:user._id,
+        });
+
+        await passwordReset.create({
+            userId: user._id,
+            otpHash,
+            expiredAt: new Date(Date.now() + 10*60*1000 ),
+            verified:false
+        });
+        await sendOtpEmail(user.email, otp);
+
+        res.status(200).json({
+            success:true,
+            message:"OTP send successfully"
+        });
+    } catch (error) {
+        console.log("opt send error",error.message);
+        return res.status(500).json({
+            success:false,
+            message:"Internal server error"
+        });
+    }
+}
