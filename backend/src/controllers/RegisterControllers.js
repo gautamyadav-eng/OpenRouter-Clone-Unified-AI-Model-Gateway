@@ -131,3 +131,125 @@ export const forgotPassword = async(req,res) => {
         });
     }
 }
+
+export const verifyOtp = async(req, res) => {
+    try{
+        const {email, otp} = req.body;
+
+        if(!email || !otp){
+            return res.status(400).json({
+                success:false,
+                message:"email or OTP are required"
+            });
+        }
+        const user = await Users.findOne({email});
+
+        if(!user){
+            return res.status(404).json({
+                success:false,
+                message:"User not found"
+            });
+        }
+
+        const resetData = await passwordReset.findOne({
+            userId : user._id
+        })
+        if(!resetData){
+            return res.status(404).json({
+                success:false,
+                message:"OTP not found"
+            });
+        }
+        if(resetData.expiredAt < new Date() ){
+            return res.status(400).json({
+                success:false,
+                message:"OTP is Expired"
+            });
+        }
+        const isValidOtp = await bcrypt.compare(otp, resetData.otpHash);
+        if(!isValidOtp){
+            return res.status(400).json({
+                success:false,
+                message:"Invalid OTP"
+            });
+        }
+        resetData.verified = true;
+        resetData.save();
+
+        return res.status(200).json({
+            success:true,
+            message:"OTP verified successfully "
+        });
+        
+    }catch(error){
+        console.log("OTP verification error", error.message);
+        return res.status(500).json({
+            success:false,
+            message:"Internal server error"
+        });
+    }
+}
+
+export const resetPassword = async(req, res) => {
+    try {
+      const {email, newPassword} = req.body;
+
+      if(!newPassword || newPassword.length < 6){
+        return res.status(400).json({
+            success:false,
+            message:" Passwort must be at least 6 characters"
+        });
+      }
+      if(!email || !newPassword){
+        return res.status(400).json({
+            success:false,
+            message:"email or Password are required"
+        });
+      }  
+      const user = await Users.findOne({email})
+
+      if(!user){
+        return res.status(404).json({
+            success:false,
+            message:"User not Found"
+        });
+      }
+
+      const resetData = await passwordReset.findOne({
+        userId : user._id
+      });
+      
+      if(!resetData){
+        return res.status(404).json({
+            success:false,
+            message:"Password reset request not found!"
+        });
+      }
+
+      if(!resetData.verified){
+        return res.status(400).json({
+            success:false,
+            message:"OTP verification required"
+        });
+      }
+
+      const hashPassword = await bcrypt.hash(newPassword,10);
+      user.password = hashPassword;
+      await user.save();
+
+      await passwordReset.deleteOne({
+        _id:resetData._id
+      });
+      return res.status(200).json({
+        success:true,
+        message:"Password reset Successfully"
+      })
+    } catch (error) {
+        console.log("ResetPassword error", error.message);
+        return res.status(500).json({
+            success:false,
+            message:"Internal server error"
+        });
+        
+    }
+}
