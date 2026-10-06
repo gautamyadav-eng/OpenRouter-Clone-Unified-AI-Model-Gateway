@@ -6,10 +6,10 @@ const randomSecretKey = async () => {
     return secret.toString("hex");
 }
 
-const hashApiKey = (apiKey) =>{
-    const hash =  createHash("sha256");
-    hash.update(apiKey);
-    return hash.digest("hex");
-}
+    const hashApiKey = (apiKey) =>{
+        const hash =  createHash("sha256");
+        hash.update(apiKey);
+        return hash.digest("hex");
+    }
 
 export {randomSecretKey, hashApiKey};

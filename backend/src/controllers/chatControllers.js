@@ -21,7 +21,7 @@ const chatControllers =async (req, res) => {
         });
     }
     try{
-        const startTime = Date.now();
+    const startTime = Date.now();
    const result = await callProvider(
     selectedModel.provider, 
     selectedModel.modelId, 
