@@ -1,6 +1,9 @@
 import React from "react";
+import {useNavigate} from "react-router-dom"
 
 function Hero() {
+
+  const navigate = useNavigate();
   return (
     <>
       <div className="container mx-auto p-5 mb-5 flex flex-col items-center">
@@ -11,9 +14,11 @@ function Hero() {
             <a href="" className=" pl-1 text-black underline underline-offset-2 transition hover:text-blue-700">prices</a>, better 
             <a href="" className=" pl-1 text-black underline underline-offset-2 transition hover:text-blue-700">uptime</a>, no subscriptions.</p>
         </div>
+
         <div className="my-3 w-full md:w-auto">
-          <button className=" w-full md:w-50 p-3 m-2 border border-gray-200 rounded-lg text-[14px] hover:shadow-md bg-[#7624F4] text-white transition hover:bg-blue-700 ">GetAPIKey</button>
-          <button className=" w-full md:w-50 p-3 m-2 border border-gray-200 rounded-lg text-[15px] hover:shadow-md text-[FCFCFE] transition hover:text-blue-700 hover:bg-gray-100  ">Discover Models</button>
+          <button onClick={() => navigate("/signup")} className=" w-full md:w-50 p-3 m-2 border border-gray-200 rounded-lg text-[14px] hover:shadow-md bg-[#7624F4] text-white transition hover:bg-blue-700 ">GetAPIKey</button>
+
+          <button onClick={() => navigate("/models")} className=" w-full md:w-50 p-3 m-2 border border-gray-200 rounded-lg text-[15px] hover:shadow-md text-[FCFCFE] transition hover:text-blue-700 hover:bg-gray-100  ">Discover Models</button>
         </div>
 
         <div className="flex sm:flex-row sm:gap-2 md:gap-12 my-10 py-5 max-w-4xl mx-auto">

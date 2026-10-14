@@ -10,10 +10,12 @@ import Register from './pages/Register/Register';
 import Login from './pages/Login/Login'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
+import ScrollToTop from './components/ScrollToTop';
 
  function App(){
   return (
     <BrowserRouter>
+    <ScrollToTop/>
       <Navbar/>
     <Routes>
       <Route path="/" element={<Home/>}/>

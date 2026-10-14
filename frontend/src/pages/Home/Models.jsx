@@ -3,8 +3,10 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import chatgpt from "../../assets/chatgpt.svg";
 import google from "../../assets/google.svg"
 import claude from "../../assets/claude.png"
+import { useNavigate } from "react-router-dom";
 
 const Models = () => {
+  const navigate = useNavigate();
   return (
     <section className="w-full my-5 ">
       <div className="mx-auto max-w-7xl">
@@ -15,7 +17,7 @@ const Models = () => {
               500+ active models on 80+ providers
             </p>
           </div>
-          <button className="text-sm text-gray-600 items-center transition hover:text-blue-700 ">
+          <button onClick={() => navigate("/models")} className="text-sm text-gray-600 items-center transition hover:text-blue-700 ">
             View all <ArrowForwardIcon fontSize="small" />
           </button>
         </div>

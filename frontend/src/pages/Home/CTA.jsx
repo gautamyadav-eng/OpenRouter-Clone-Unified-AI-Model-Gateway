@@ -1,6 +1,8 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const CTA = () => {
+  const navigate =useNavigate();
   return (
      <section className="w-full bg-white px-5 py-16 sm:px-8 lg:py-24">
       <div className="mx-auto max-w-7xl">
@@ -19,11 +21,11 @@ const CTA = () => {
           </p>
 
           <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-            <div className="rounded-xl bg-gray-950 px-6 py-3 text-sm font-medium text-white">
+            <div onClick={() => navigate("/signup")} className="rounded-xl bg-gray-950 px-6 py-3 text-sm font-medium text-white">
               Get Started
             </div>
 
-            <div className="rounded-xl border border-gray-300 bg-white px-6 py-3 text-sm font-medium text-gray-900">
+            <div onClick={() => navigate("/models")} className="rounded-xl border border-gray-300 bg-white px-6 py-3 text-sm font-medium text-gray-900">
               Explore Models
             </div>
           </div>
