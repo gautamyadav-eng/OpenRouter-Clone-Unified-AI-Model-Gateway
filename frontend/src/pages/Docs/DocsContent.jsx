@@ -1,8 +1,8 @@
 import React from "react";
-import { ArrowRight, CheckCircle2, Code2, Layers3, Zap } from "lucide-react";
+import { ArrowRight, CheckCircle2, Code2, Layers3, Zap,MessageSquare } from "lucide-react";
 import CodeExample from "./CodeExample";
 
-const DocsContent = () => {
+const DocsContent = ({activeSection}) => {
   const quickstartCode = `const response = await fetch("/api/chat", {
   method: "POST",
   headers: {
@@ -20,7 +20,8 @@ console.log(data);`;
 
   return (
     <article className="min-w-0 px-5 py-10 sm:px-8 lg:px-12">
-      {/* Introduction */}
+    {activeSection === "Introduction" && (
+      <>
       <section id="introduction" className="mb-12">
         <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-gray-200 bg-gray-50 px-3 py-1.5 text-xs font-medium text-gray-600">
           <Code2 size={14} />
@@ -28,7 +29,7 @@ console.log(data);`;
         </div>
 
         <h1 className="text-3xl font-bold tracking-tight text-gray-950 sm:text-4xl">
-          Introduction
+          {activeSection}
         </h1>
 
         <p className="mt-5 max-w-3xl text-base leading-7 text-gray-600">
@@ -43,6 +44,7 @@ console.log(data);`;
           and returns the response to your application.
         </p>
       </section>
+    
 
       {/* How it works */}
       <section id="how-it-works" className="mb-14">
@@ -107,8 +109,10 @@ console.log(data);`;
           </div>
         </div>
       </section>
-
-      {/* Quickstart */}
+      </>
+    )}
+      {activeSection === "Quickstart" &&(
+        
       <section id="quickstart" className="mb-14">
         <h2 className="text-2xl font-semibold tracking-tight text-gray-950">
           Quickstart
@@ -131,8 +135,8 @@ console.log(data);`;
           </p>
         </div>
       </section>
-
-      {/* Authentication */}
+    )}
+      {activeSection === "Authentication" &&(
       <section id="authentication" className="mb-14">
         <h2 className="text-2xl font-semibold tracking-tight text-gray-950">
           Authentication
@@ -155,8 +159,10 @@ console.log(data);`;
           </p>
         </div>
       </section>
+      )}
+    
 
-      {/* API Reference */}
+      {activeSection === "API Keys" && (
       <section id="api-reference" className="mb-14">
         <h2 className="text-2xl font-semibold tracking-tight text-gray-950">
           API Reference
@@ -204,6 +210,224 @@ console.log(data);`;
           </div>
         </div>
       </section>
+      )}
+      {/* Models */}
+{activeSection === "Models" && (
+  <section id="models" className="mb-14">
+    <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-gray-200 bg-gray-50 px-3 py-1.5 text-xs font-medium text-gray-600">
+      <Layers3 size={14} />
+      API Reference
+    </div>
+
+    <h1 className="text-3xl font-bold tracking-tight text-gray-950 sm:text-4xl">
+      Models
+    </h1>
+
+    <p className="mt-5 max-w-3xl text-base leading-7 text-gray-600">
+      Explore the AI models available through your OpenRouter Clone.
+      Use this endpoint to retrieve the list of supported models.
+    </p>
+
+    {/* Endpoint */}
+    <div className="mt-8">
+      <h2 className="text-xl font-semibold text-gray-950">
+        List Models
+      </h2>
+
+      <div className="mt-4 flex items-center gap-3 rounded-lg border border-gray-200 bg-gray-50 p-4">
+        <span className="rounded-md bg-emerald-100 px-2.5 py-1 text-xs font-bold text-emerald-700">
+          GET
+        </span>
+
+        <code className="text-sm text-gray-800">
+          /api/models
+        </code>
+      </div>
+
+      <p className="mt-3 text-sm leading-6 text-gray-600">
+        Returns the models configured in your backend.
+      </p>
+    </div>
+
+    {/* Response example */}
+    <div className="mt-8">
+      <h2 className="text-xl font-semibold text-gray-950">
+        Example Response
+      </h2>
+
+      <div className="mt-4">
+        <CodeExample
+          title="JSON"
+          code={JSON.stringify(
+            {
+              success: true,
+              message: "Available model fetched successfully",
+              data: {
+                model: [
+                  {
+                    name: "GPT",
+                    provider: "OpenAI",
+                    modelId: "gpt-5.6-luna"
+                  },
+                  {
+                    name: "Claude",
+                    provider: "ClaudeAI",
+                    modelId: "claude-sonnet-5"
+                  },
+                  {
+                    name: "Gemini",
+                    provider: "GeminiAI",
+                    modelId: "gemini-3.8-flash"
+                  }
+                ]
+              }
+            },
+            null,
+            2
+          )}
+        />
+      </div>
+    </div>
+
+    {/* How to use */}
+    <div className="mt-8 rounded-xl border border-gray-200 p-5">
+      <h2 className="font-semibold text-gray-950">
+        How it works
+      </h2>
+
+      <ol className="mt-3 list-decimal space-y-2 pl-5 text-sm leading-6 text-gray-600">
+        <li>Your application sends a GET request to the models endpoint.</li>
+        <li>The backend reads the configured models from its model configuration.</li>
+        <li>The API returns the model list in JSON format.</li>
+      </ol>
+    </div>
+  </section>
+)}
+
+{/* Chat Completions */}
+{activeSection === "Chat Completions" && (
+  <section id="chat-completions" className="mb-14">
+    <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-gray-200 bg-gray-50 px-3 py-1.5 text-xs font-medium text-gray-600">
+      <MessageSquare size={14} />
+      API Reference
+    </div>
+
+    <h1 className="text-3xl font-bold tracking-tight text-gray-950 sm:text-4xl">
+      Chat Completions
+    </h1>
+
+    <p className="mt-5 max-w-3xl text-base leading-7 text-gray-600">
+      Send a message or prompt to an AI model through your gateway
+      and receive a generated response.
+    </p>
+
+    {/* Endpoint */}
+    <div className="mt-8">
+      <h2 className="text-xl font-semibold text-gray-950">
+        Create Chat Completion
+      </h2>
+
+      <div className="mt-4 flex items-center gap-3 rounded-lg border border-gray-200 bg-gray-50 p-4">
+        <span className="rounded-md bg-violet-100 px-2.5 py-1 text-xs font-bold text-violet-700">
+          POST
+        </span>
+
+        <code className="text-sm text-gray-800">
+          /api/chat
+        </code>
+      </div>
+
+      <p className="mt-3 text-sm leading-6 text-gray-600">
+        Sends a prompt to the chat endpoint. The request fields
+        must match your backend implementation.
+      </p>
+    </div>
+
+    {/* Request Example */}
+    <div className="mt-8">
+      <h2 className="text-xl font-semibold text-gray-950">
+        Example Request
+      </h2>
+
+      <div className="mt-4">
+        <CodeExample
+          title="JavaScript"
+          code={`const response = await fetch(
+  "http://localhost:3000/api/chat",
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer YOUR_API_KEY"
+    },
+    body: JSON.stringify({
+      model: "GPT",
+      prompt: "Hello, AI!"
+    })
+  }
+);
+
+const data = await response.json();
+console.log(data);`}
+        />
+      </div>
+    </div>
+
+    {/* Request Parameters */}
+    <div className="mt-8">
+      <h2 className="text-xl font-semibold text-gray-950">
+        Request Parameters
+      </h2>
+
+      <div className="mt-4 overflow-x-auto rounded-xl border border-gray-200">
+        <table className="w-full text-left text-sm">
+          <thead className="bg-gray-50 text-gray-700">
+            <tr>
+              <th className="px-4 py-3 font-semibold">Parameter</th>
+              <th className="px-4 py-3 font-semibold">Type</th>
+              <th className="px-4 py-3 font-semibold">Description</th>
+            </tr>
+          </thead>
+
+          <tbody className="divide-y divide-gray-200 text-gray-600">
+            <tr>
+              <td className="px-4 py-3">
+                <code>model</code>
+              </td>
+              <td className="px-4 py-3">String</td>
+              <td className="px-4 py-3">
+                The model to use for the request.
+              </td>
+            </tr>
+
+            <tr>
+              <td className="px-4 py-3">
+                <code>prompt</code>
+              </td>
+              <td className="px-4 py-3">String</td>
+              <td className="px-4 py-3">
+                The text sent to the AI model.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    {/* Response Handling */}
+    <div className="mt-8 rounded-xl border border-gray-200 bg-gray-50 p-5">
+      <h2 className="font-semibold text-gray-950">
+        Handling the Response
+      </h2>
+
+      <p className="mt-3 text-sm leading-6 text-gray-600">
+        The server returns a response in JSON format. Use
+        response.json() to read the response body and inspect
+        the fields returned by your backend.
+      </p>
+    </div>
+  </section>
+)}
 
       {/* Get Started */}
       <section className="rounded-2xl border border-gray-200 bg-gray-50 p-6 sm:p-8">

@@ -1,3 +1,4 @@
+
 import React from "react";
 import {
   BookOpen,
@@ -26,13 +27,14 @@ const sections = [
   },
   {
     title: "MORE",
-    items: [
-      { name: "Authentication", icon: ShieldCheck },
-    ],
+    items: [{ name: "Authentication", icon: ShieldCheck }],
   },
 ];
 
-const DocsSidebar = () => {
+const DocsSidebar = ({
+  activeSection,
+  onSectionChange
+}) => {
   return (
     <aside className="hidden min-h-screen w-64 shrink-0 border-r border-gray-200 bg-white px-4 py-8 md:block">
       <h2 className="mb-6 px-3 text-lg font-semibold text-gray-950">
@@ -47,15 +49,16 @@ const DocsSidebar = () => {
             </h3>
 
             <div className="space-y-1">
-              {section.items.map((item, index) => {
+              {section.items.map((item) => {
                 const Icon = item.icon;
-                const isActive =
-                  section.title === "GETTING STARTED" && index === 0;
+                const isActive = activeSection === item.name;
 
                 return (
                   <button
                     key={item.name}
                     type="button"
+                    onClick={() => onSectionChange(item.name)}
+                    aria-current={isActive ? "page" : undefined}
                     className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-sm transition ${
                       isActive
                         ? "bg-gray-100 font-medium text-gray-950"
