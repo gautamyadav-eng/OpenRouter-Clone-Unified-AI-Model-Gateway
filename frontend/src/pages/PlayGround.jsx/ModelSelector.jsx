@@ -1,28 +1,34 @@
-import React, { useState } from "react";
+import React, { useState, useEffect  } from "react";
+import axios from 'axios';
 import { ChevronDown, Sparkles, Zap, Check } from "lucide-react";
 
-const models = [
-  {
-    name: "GPT",
-    provider: "OpenAI",
-    description: "General purpose AI model",
-  },
-  {
-    name: "Claude",
-    provider: "Anthropic",
-    description: "Writing, analysis and coding",
-  },
-  {
-    name: "Gemini",
-    provider: "Google",
-    description: "Multimodal AI model",
-  },
-];
+
 
 const ModelSelector = () => {
-  const [selectedModel, setSelectedModel] = useState(models[0]);
+  const [models, setModels] = useState([]);
+  const [selectedModel, setSelectedModel] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error ,setError] = useState("");
 
+  useEffect (() =>{
+    const fetchModels = async () => {  
+      try {
+      const response = await axios.get("http://localhost:3000/api/models");
+      
+      const modelList = response.data.data.model;
+      
+      setModels(modelList);
+      setSelectedModel(modelList[0] || null);
+      }catch(err){
+        console.log("Error fetching models:", error);
+        setError("models are not loading");
+      }finally{
+        setLoading(false);
+      }
+    }
+    fetchModels();
+  }, [])
   return (
     <section className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
       <h2 className="text-lg font-semibold text-gray-950">
@@ -37,6 +43,7 @@ const ModelSelector = () => {
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
+          
           className="flex w-full items-center justify-between rounded-xl border border-gray-200 p-4 text-left hover:border-gray-400"
         >
           <div className="flex items-center gap-3">
@@ -46,11 +53,11 @@ const ModelSelector = () => {
 
             <div>
               <p className="font-medium text-gray-950">
-                {selectedModel.name}
+                {selectedModel ? selectedModel.name : "Loading models..."}
               </p>
 
               <p className="mt-1 text-sm text-gray-500">
-                {selectedModel.provider} · {selectedModel.description}
+                {selectedModel ? selectedModel.provider : ""}
               </p>
             </div>
           </div>

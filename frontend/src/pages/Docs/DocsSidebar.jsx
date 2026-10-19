@@ -1,5 +1,4 @@
-
-import React from "react";
+import React, { useState } from "react";
 import {
   BookOpen,
   KeyRound,
@@ -31,18 +30,34 @@ const sections = [
   },
 ];
 
-const DocsSidebar = ({
-  activeSection,
-  onSectionChange
-}) => {
+const DocsSidebar = ({ activeSection, onSectionChange }) => {
+  
+  const [search, setSearch] = useState("");
+
+  const filterSearch = sections.map(
+    (section) =>({
+      ...section,
+      items: section.items.filter((item) => 
+        item.name.toLowerCase().includes(search.toLowerCase())),
+    })
+  ).filter((section)=> section.items.length > 0);
   return (
     <aside className="hidden min-h-screen w-64 shrink-0 border-r border-gray-200 bg-white px-4 py-8 md:block">
       <h2 className="mb-6 px-3 text-lg font-semibold text-gray-950">
         Documentation
       </h2>
 
+      <div className="mb-6 px-3">
+        <input
+          type="text"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Search documentation..."
+          className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm outline-none focus:border-gray-400"
+        />
+      </div>
       <nav className="space-y-7">
-        {sections.map((section) => (
+        {filterSearch.map((section) => (
           <div key={section.title}>
             <h3 className="mb-3 px-3 text-xs font-semibold tracking-wider text-gray-400">
               {section.title}
