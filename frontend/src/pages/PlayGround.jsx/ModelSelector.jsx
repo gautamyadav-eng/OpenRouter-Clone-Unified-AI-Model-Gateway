@@ -4,7 +4,7 @@ import { ChevronDown, Sparkles, Zap, Check } from "lucide-react";
 
 
 
-const ModelSelector = () => {
+const ModelSelector = ({onModelSelect}) => {
   const [models, setModels] = useState([]);
   const [selectedModel, setSelectedModel] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
@@ -42,7 +42,7 @@ const ModelSelector = () => {
       <div className="relative mt-5">
         <button
           type="button"
-          onClick={() => setIsOpen(!isOpen)}
+          onClick={() => {setSelectedModel(models); onModelSelect(models); setIsOpen(!isOpen);}}
           
           className="flex w-full items-center justify-between rounded-xl border border-gray-200 p-4 text-left hover:border-gray-400"
         >

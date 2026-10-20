@@ -1,7 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { Paperclip, Send, SlidersHorizontal } from "lucide-react";
 
-const PromptInput = () => {
+const PromptInput = ({onRunPrompt}) => {
+
+  const [systemPrompt, setSystemPrompt] = useState("");
+  const [prompt, setPrompt] = useState("");
+
   return (
     <section className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
       <div className="mb-5 flex items-center justify-between gap-3">
@@ -33,6 +37,8 @@ const PromptInput = () => {
 
         <textarea
           id="system-prompt"
+          value={systemPrompt}
+          onChange={(e) => setSystemPrompt(e.target.value)}
           rows={3}
           placeholder="You are a helpful AI assistant..."
           className="w-full resize-y rounded-xl border border-gray-200 p-3 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-gray-400"
@@ -49,6 +55,8 @@ const PromptInput = () => {
 
         <textarea
           id="user-prompt"
+          value={prompt}
+          onChange={(e) => setPrompt(e.target.value)}
           rows={6}
           placeholder="Ask anything..."
           className="w-full resize-y rounded-xl border border-gray-200 p-3 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-gray-400"
@@ -66,6 +74,7 @@ const PromptInput = () => {
 
         <button
           type="button"
+          onClick={() => onRunPrompt({systemPrompt, prompt})}
           className="flex items-center gap-2 rounded-xl bg-gray-950 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-gray-800"
         >
           <Send size={16} />

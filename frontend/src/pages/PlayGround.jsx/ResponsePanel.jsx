@@ -8,7 +8,7 @@ import {
   Code2,
 } from "lucide-react";
 
-const ResponsePanel = () => {
+const ResponsePanel = ({response, loading, error}) => {
   return (
     <section className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
       {/* Header */}
@@ -41,11 +41,26 @@ const ResponsePanel = () => {
             <span className="text-sm font-medium">AI Assistant</span>
           </div>
 
-          <p className="text-sm leading-7 text-gray-500">
-            Your AI response will appear here after you run a prompt.
-            Select a model, enter your message, and click Run Prompt
-            to get started.
-          </p>
+          
+{loading ? (
+  <p className="text-sm leading-7 text-gray-500">
+    Generating response...
+  </p>
+) : error ? (
+  <p className="text-sm leading-7 text-red-600">
+    {error}
+  </p>
+) : response ? (
+  <pre className="whitespace-pre-wrap className-words text-sm leading-7 text-gray-700">
+    {JSON.stringify(response.data, null, 2)}
+  </pre>
+) : (
+  <p className="text-sm leading-7 text-gray-500">
+    Your AI response will appear here after you run a prompt.
+    Select a model, enter your message, and click Run Prompt
+    to get started.
+  </p>
+)}
         </div>
       </div>
 
