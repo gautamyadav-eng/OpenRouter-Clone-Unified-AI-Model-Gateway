@@ -15,7 +15,7 @@ export const registerUser = async (req, res) => {
         if(existingUser){
             return res.status(409).json({
                 success: false,
-                message:"User already exits"
+                message:"User already exits. Please Login!"
             });
         }
         
@@ -174,7 +174,7 @@ export const verifyOtp = async(req, res) => {
             });
         }
         resetData.verified = true;
-        resetData.save();
+         await resetData.save();
 
         return res.status(200).json({
             success:true,
