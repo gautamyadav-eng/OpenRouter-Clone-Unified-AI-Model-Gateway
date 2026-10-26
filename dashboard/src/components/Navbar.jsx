@@ -1,6 +1,7 @@
 
-import React, { useState } from "react";
+import React, { useState ,useEffect} from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios"
 import {
   Menu,
   X,
@@ -29,12 +30,50 @@ const Navbar = () => {
 
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [username, setUsername] = useState("");
 
   const handleNavigation = (path) => {
     navigate(path);
     setIsProfileOpen(false);
     setIsMobileMenuOpen(false);
   };
+
+  const handelLogout = async () => {
+    try{
+      const {data } = await axios.post( "http://localhost:3000/api/auth/logout", {}, {
+        withCredentials: true,
+      });
+
+      if (data.success) {
+        window.location.href ="http://localhost:5173";
+      }
+    }catch(error){
+      console.log("Logout error:", error);
+      window.alert("Logout failed. Please try again.");
+    }
+  };
+
+  const formattedUsername = username ? username.trim().charAt(0).toUpperCase() + username.trim().slice(1).toLowerCase():"user";
+  const UserIntial = username ? username.trim().charAt(0).toUpperCase() :"U";
+  
+
+  useEffect(() => {
+    const loadProfile = async () => {
+      try{
+        const {data} = await axios.get( "http://localhost:3000/api/auth/profile",{
+          withCredentials: true,
+        });
+
+        if(data.success) {
+          setUsername(data.user.name || "");
+        }
+      }catch(error) {
+        console.error("Profile load error:" ,error)
+      }
+    };
+
+    loadProfile();
+  }, []);
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-gray-200 bg-white text-gray-900">
@@ -111,7 +150,7 @@ const Navbar = () => {
             className="flex items-center gap-2 rounded-full p-1 transition-colors hover:bg-gray-100"
           >
             <div className="flex h-9 w-9 items-center justify-center rounded-full border border-gray-200 bg-gray-50 transition-colors hover:border-blue-300 hover:bg-blue-50">
-              <span className="text-sm font-semibold">G</span>
+              <span className="text-sm font-semibold">{UserIntial}</span>
             </div>
 
             <ChevronDown
@@ -127,12 +166,12 @@ const Navbar = () => {
               {/* User Info */}
               <div className="flex items-center gap-3 border-b border-gray-100 p-4">
                 <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-900 text-sm font-semibold text-white">
-                  G
+                  {UserIntial}
                 </div>
 
                 <div className="min-w-0">
                   <p className="truncate text-sm font-semibold text-gray-900">
-                    Gautam Yadav
+                    {formattedUsername}
                   </p>
                   <p className="text-xs text-gray-500">Account Menu</p>
                 </div>
@@ -181,9 +220,7 @@ const Navbar = () => {
               <div className="border-t border-gray-100 p-2">
                 <button
                   type="button"
-                  onClick={() => {
-                    setIsProfileOpen(false);
-                  }}
+                  onClick={handelLogout}
                   className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-red-600 transition-colors hover:bg-red-50"
                 >
                   <LogOut size={17} />
@@ -288,7 +325,7 @@ const Navbar = () => {
 
               <button
                 type="button"
-                onClick={() => setIsMobileMenuOpen(false)}
+                onClick={handelLogout}
                 className="flex w-full items-center gap-3 rounded-lg px-3 py-3 text-sm font-medium text-red-600 transition-colors hover:bg-red-50"
               >
                 <LogOut size={18} />

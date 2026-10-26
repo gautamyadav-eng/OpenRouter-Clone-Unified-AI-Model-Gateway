@@ -5,10 +5,21 @@ import passwordReset from "../models/passwordReset.js";
 import { sendOtpEmail } from "../utils/emailUtils.js";
 import jwt from "jsonwebtoken";
 
+const AUTH_COOKIE_NAME = "openrouter_token";
+const ONE_DAY_IN_MS = 24 * 60 * 60 * 1000;
+
+
+const getCookieOptions = () => ({
+  httpOnly: true,
+  secure: process.env.NODE_ENV === "production",
+  sameSite: "lax",
+  maxAge: ONE_DAY_IN_MS,
+});
 
 export const registerUser = async (req, res) => {
     try{
-        const {name, email, password} = req.body;
+        const {name, username, email, password} = req.body;
+        const userName = name || username;
 
         const existingUser = await Users.findOne({email});
 
@@ -22,7 +33,7 @@ export const registerUser = async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, 10);
 
         const newUser = new Users({
-            name, 
+           name: userName,
             email, 
             password:hashedPassword
         });
@@ -66,18 +77,24 @@ export const loginUsers = async (req, res) =>{
     const token = jwt.sign(
         {
             userId: user._id,
-            email : user.email
+            email : user.email,
+            name  : user.name
         },
         process.env.JWT_SECRET_KEY,
         {
             expiresIn:"1d"
         }
     );
-
+    
+    res.cookie(AUTH_COOKIE_NAME, token, getCookieOptions());
     res.status(200).json({
         success:true,
         message:"Login Successfully",
-        token
+        tuser:{
+            id : user._id,
+            name: user.name,
+            email: user.email
+        }
     });
     }catch(error){
         console.log("Login Error", error.message);
@@ -86,6 +103,18 @@ export const loginUsers = async (req, res) =>{
             message:"Internal Server error"
         });
     }
+};
+
+export const logoutUser = async (req, res) => {
+    res.clearCookie(AUTH_COOKIE_NAME, {
+        httpOnly:true,
+        secure:process.env.NODE_ENV === "production",
+        sameSite: "lax",
+    });
+    return res.status(200).json({
+        success:true,
+        message:"Logout successFul",
+    });
 };
 
 export const forgotPassword = async(req,res) => {

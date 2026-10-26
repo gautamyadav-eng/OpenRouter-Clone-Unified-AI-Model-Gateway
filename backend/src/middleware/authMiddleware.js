@@ -4,14 +4,16 @@ const tokenMiddleware = async (req, res, next) => {
     try{
     const authHeader = req.headers.authorization;
 
-    if(!authHeader){
+    const tokenFromHeader = authHeader?.startsWith("Bearer")? authHeader.split(" ")[1] : null;
+    
+    const token = req.cookies.openrouter_token || tokenFromHeader;
+
+    if(!token){
         return res.status(401).json({
             success:false,
-            message:"Token is missing"
+            message:"Login token is missing"
         });
     }
-
-    const token = authHeader.split(" ")[1];
     const decode = jwt.verify(
         token,
         process.env.JWT_SECRET_KEY

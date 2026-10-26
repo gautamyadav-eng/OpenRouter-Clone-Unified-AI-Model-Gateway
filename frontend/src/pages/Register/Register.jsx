@@ -41,7 +41,7 @@ export default function Signup() {
 
         if(data.success){
           toast.success("Login Successfully!")
-          navigate("/")
+          window.location.href = "http://localhost:5174";
         }else{
           toast.error(data.message || "Login Failed");
         }
