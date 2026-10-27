@@ -1,23 +1,28 @@
-
+import {useNavigate} from "react-router-dom"
 const actions = [
   {
     title: "Try Playground",
     description: "Test AI models with your own prompts.",
     icon: "⌘",
+    path:"/playground"
   },
   {
     title: "Explore Models",
     description: "Discover and compare available AI models.",
     icon: "◈",
+    path: "/models"
   },
   {
     title: "Manage API Keys",
     description: "View your API key management options.",
     icon: "⚿",
+    path:"/apikeys"
   },
 ];
 
 const QuickActions = () => {
+
+  const navigate = useNavigate();
   return (
     <section>
       <div className="mb-4">
@@ -33,6 +38,7 @@ const QuickActions = () => {
         {actions.map((action) => (
           <div
             key={action.title}
+            onClick={() => navigate(action.path)}
             className="rounded-xl border border-gray-200 bg-white p-5 transition-colors hover:border-gray-300"
           >
             <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gray-100 text-xl text-gray-800">
@@ -47,7 +53,7 @@ const QuickActions = () => {
               {action.description}
             </p>
 
-            <p className="mt-4 text-sm font-medium text-gray-700">
+            <p className="mt-4 text-sm font-medium text-gray-700 cursor-pointer hover:text-blue-700">
               Explore <span aria-hidden="true">→</span>
             </p>
           </div>

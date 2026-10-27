@@ -1,3 +1,5 @@
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 const statsData = [
   {
@@ -26,7 +28,60 @@ const statsData = [
   },
 ];
 
+
 const Stats = () => {
+
+  const [modelCount, setModelCount] = useState(0);
+  const [apiKeyCount, setApiKeyCount] = useState(0)
+
+  useEffect(() => {
+    const fetchModel = async () =>{
+      try{
+      const {data} = await axios.get("http://localhost:3000/api/models");
+
+      if(data.success){
+        setModelCount(data.data.model.length);
+      }
+    }catch(error){
+      console.log("model fetch error:",error);
+    }
+  };
+  fetchModel();
+  }, []);
+
+  useEffect(() => {
+    const fetchApiKey = async() => {
+      try{
+        const {data} = await axios.get("http://localhost:3000/api/keys", {
+          withCredentials: true,
+        });
+
+        if(data.success){
+          setApiKeyCount(data.apiKeys.length);
+        }
+      }catch(error){
+        if(error.response?.status === 404){
+          setApiKeyCount(0);
+          return;
+        }
+        console.log("API key fetch error:", error);
+      }
+    };
+    fetchApiKey();
+  }, []);
+
+  const liveStatsData = statsData.map((stat) =>{
+    if(stat.title === 'Available Models'){
+      return {...stat, value: modelCount} 
+    }
+
+    if(stat.title === "API Keys"){
+      return {...stat, value:apiKeyCount};
+    }
+    return stat;
+  }
+  );
+
   return (
     <section>
       <div className="mb-4">
@@ -39,7 +94,7 @@ const Stats = () => {
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        {statsData.map((stat) => (
+        {liveStatsData.map((stat) => (
           <div
             key={stat.title}
             className="rounded-xl border border-gray-200 bg-white p-5"
