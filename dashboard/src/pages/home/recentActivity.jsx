@@ -1,36 +1,62 @@
+import React, { useEffect, useState } from "react";
+const API_URL = "http://localhost:3000/api/activity";
 
-const activities = [
-  {
-    model: "GPT",
-    endpoint: "/api/chat",
-    status: "Success",
-    tokens: "1,240",
-    time: "2 min ago",
-  },
-  {
-    model: "Claude",
-    endpoint: "/api/chat",
-    status: "Success",
-    tokens: "856",
-    time: "15 min ago",
-  },
-  {
-    model: "Gemini",
-    endpoint: "/api/chat",
-    status: "Failed",
-    tokens: "—",
-    time: "32 min ago",
-  },
-  {
-    model: "GPT",
-    endpoint: "/api/chat",
-    status: "Success",
-    tokens: "2,105",
-    time: "1 hour ago",
-  },
-];
+const formatTime = (dateValue) => {
+  const date = new Date(dateValue);
+
+  if(Number.isNaN(date.getTime())){
+    return "Unknown"; 
+  }
+
+  const seconds = Math.max(0,Math.floor((Date.now() - date.getTime())/1000));
+
+  if(seconds < 60) return "just now";
+
+ const minutes = Math.floor(seconds / 60);
+ if(minutes <60) return `${minutes} min ago`;
+ 
+ const hours = Math.floor(minutes/60);
+ if(hours <24) return `${hours} hour${hours >1 ? "s":""}ago`;
+
+ const days = Math.floor(hours /24);
+ return `${days} day ${days>1 ? "s": ""}ago`;
+}
 
 const RecentActivity = () => {
+
+  const [activities, setActivities] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const fetchActivities = async() =>{
+      try{
+       setLoading(true);
+        setError("");
+
+        const response = await fetch(API_URL, {
+          method: "GET",
+         
+          credentials:"include",
+        });
+
+        const result = await response.json();
+
+        if(!response.ok  || !result.success){
+          throw new Error(
+            result.message || "Failed to fetch recent activity"
+          );
+        }
+
+        setActivities(result.activities || []);
+      }catch(error){
+        setError(error.message || "Somthing went wrong.");
+      }finally{
+        setLoading(false);
+      }
+    };
+    fetchActivities();
+  }, [])
   return (
     <section className="overflow-hidden rounded-xl border border-gray-200 bg-white">
       <div className="border-b border-gray-200 px-5 py-5">
@@ -55,47 +81,70 @@ const RecentActivity = () => {
           </thead>
 
           <tbody className="divide-y divide-gray-100">
-            {activities.map((activity, index) => (
-              <tr
-                key={`${activity.model}-${index}`}
-                className="text-gray-700"
-              >
+            {loading ? (
+              <tr   colSpan="5" className="text-gray-700" >
                 <td className="whitespace-nowrap px-5 py-4 font-medium text-gray-900">
-                  {activity.model}
-                </td>
-
-                <td className="whitespace-nowrap px-5 py-4 text-gray-500">
-                  {activity.endpoint}
-                </td>
-
-                <td className="whitespace-nowrap px-5 py-4">
-                  <span
-                    className={`rounded-full px-2.5 py-1 text-xs font-medium ${
-                      activity.status === "Success"
-                        ? "bg-green-50 text-green-700"
-                        : "bg-red-50 text-red-700"
-                    }`}
-                  >
-                    {activity.status}
-                  </span>
-                </td>
-
-                <td className="whitespace-nowrap px-5 py-4">
-                  {activity.tokens}
-                </td>
-
-                <td className="whitespace-nowrap px-5 py-4 text-gray-500">
-                  {activity.time}
+                   Loading recent activity...
                 </td>
               </tr>
-            ))}
+            ):error ?(
+              <tr colSpan="5" className="text-gray-700">
+                <td className="whitespace-nowrap px-5 py-4 text-gray-500">
+                   {error}
+                </td>
+                </tr>
+            ):activities.length === 0? (
+              <tr colSpan="5" className="text-gray-700">
+                <td className="whitespace-nowrap px-5 py-4">
+                  No recent activity found.
+                </td>
+                </tr>
+            ):(
+                 activities.map((activity, index) => {
+                const status = String(activity.status || "Unknown");
+                const isSuccess = status.toLowerCase() === "success";
+
+                return (
+                  <tr
+                    key={activity._id || `${activity.model}-${index}`}
+                    className="text-gray-700"
+                  >
+                    <td className="whitespace-nowrap px-5 py-4 font-medium text-gray-900">
+                      {activity.model || "—"}
+                    </td>
+
+                    <td className="whitespace-nowrap px-5 py-4 text-gray-500">
+                      /api/chat
+                    </td>
+
+                    <td className="whitespace-nowrap px-5 py-4">
+                      <span
+                        className={`rounded-full px-2.5 py-1 text-xs font-medium ${
+                          isSuccess
+                            ? "bg-green-50 text-green-700"
+                            : "bg-red-50 text-red-700"
+                        }`}
+                      >
+                        {isSuccess ? "Success" : status}
+                      </span>
+                    </td>
+
+                    <td className="whitespace-nowrap px-5 py-4">—</td>
+
+                    <td className="whitespace-nowrap px-5 py-4 text-gray-500">
+                      {formatTime(activity.createdAt)}
+                    </td>
+                  </tr>
+                );
+})
+)}
           </tbody>
         </table>
       </div>
 
       <div className="border-t border-gray-200 px-5 py-4">
         <p className="text-xs text-gray-500">
-          Sample data for UI preview.
+           Showing your latest API requests.
         </p>
       </div>
     </section>

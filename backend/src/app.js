@@ -5,6 +5,7 @@ import chatRoutes from "./routes/chatRoutes.js";
 import modelRoutes from "./routes/modelRoutes.js";
 import apiKeyRoutes from "./routes/apiKeyRoutes.js";
 import authRoutes from "./routes/authRoutes.js"
+import activityRoutes from "./routes/activityRoutes.js";
 
 const app = express();
 app.use(cors({
@@ -19,6 +20,7 @@ app.use("/api/chat", chatRoutes);
 app.use("/api/models", modelRoutes);
 app.use("/api/keys", apiKeyRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/activity", activityRoutes);
 
 app.get("/", (req, res) => {
     res.send("Open router backend is runing");
