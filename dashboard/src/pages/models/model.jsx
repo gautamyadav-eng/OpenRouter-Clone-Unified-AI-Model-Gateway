@@ -1,14 +1,50 @@
-
+import React, { useEffect, useState } from "react";
 import { Boxes, Sparkles, ShieldCheck } from "lucide-react";
 import ModelFilters from "./modelFilter.jsx";
 import ModelList from "./modelList.jsx";
-
+import axios from "axios";
 
 const Models = () => {
+  const [modelList, setModelList] = useState(0);
+  const [providerCount, setProviderCount] = useState(0);
+  const [search, setSearch] = useState("");
+  const [models, setModels] = useState([]);
+  const [category, setCategory] = useState("All Models");
+  const [sortBy, setSortBy] = useState("Popular");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  const fetchModel = async () => {
+    try {
+      setLoading(true);
+      setError("");
+      const { data } = await axios.get("http://localhost:3000/api/models");
+
+      if (!data.success) {
+        throw new error("Failed to fetch models.");
+      }
+      const fetchedModels = data.data.model || [];
+      setModels(fetchedModels);
+      setModelList(fetchedModels.length);
+
+      const uniqueProviders = new Set(
+        fetchedModels.map((model) => model.provider),
+      );
+      setProviderCount(uniqueProviders.size);
+    } catch (error) {
+      console.error("Model fetch error:", error);
+      setError("Unable to load models. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchModel();
+  }, []);
   return (
     <main className="min-h-screen bg-gray-50 px-4 py-8 text-gray-900 sm:px-6 lg:px-10">
       <div className="mx-auto max-w-7xl space-y-8">
-
         {/* Page Header */}
         <section className="flex flex-col justify-between gap-5 sm:flex-row sm:items-center">
           <div>
@@ -44,7 +80,7 @@ const Models = () => {
         <section className="grid grid-cols-1 gap-4 sm:grid-cols-3">
           <div className="rounded-2xl border border-gray-200 bg-white p-5 transition-all duration-300 hover:-translate-y-1 hover:border-gray-300 hover:shadow-lg">
             <p className="text-sm text-gray-500">Available Models</p>
-            <h2 className="mt-3 text-3xl font-bold">12</h2>
+            <h2 className="mt-3 text-3xl font-bold">{modelList}</h2>
             <p className="mt-2 text-xs text-gray-500">
               Models listed in this demo
             </p>
@@ -52,10 +88,8 @@ const Models = () => {
 
           <div className="rounded-2xl border border-gray-200 bg-white p-5 transition-all duration-300 hover:-translate-y-1 hover:border-gray-300 hover:shadow-lg">
             <p className="text-sm text-gray-500">Providers</p>
-            <h2 className="mt-3 text-3xl font-bold">3</h2>
-            <p className="mt-2 text-xs text-gray-500">
-              Different AI providers
-            </p>
+            <h2 className="mt-3 text-3xl font-bold">{providerCount}</h2>
+            <p className="mt-2 text-xs text-gray-500">Different AI providers</p>
           </div>
 
           <div className="rounded-2xl border border-gray-200 bg-white p-5 transition-all duration-300 hover:-translate-y-1 hover:border-gray-300 hover:shadow-lg">
@@ -71,11 +105,25 @@ const Models = () => {
         </section>
 
         {/* Filters */}
-        <ModelFilters />
+        <ModelFilters
+          search={search}
+          setSearch={setSearch}
+          category={category}
+          setCategory={setCategory}
+          sortBy={sortBy}
+          setSortBy={setSortBy}
+        />
 
         {/* Models */}
-        <ModelList />
-
+        <ModelList
+          search={search}
+          models={models}
+          category={category}
+          sortBy={sortBy}
+          loading={loading}
+          error ={error}
+          onRetry = {fetchModel}
+        />
       </div>
     </main>
   );

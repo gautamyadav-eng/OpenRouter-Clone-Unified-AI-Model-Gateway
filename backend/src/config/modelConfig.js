@@ -14,5 +14,6 @@ const availableModels = [
         provider:"GeminiAI",
         modelId:"gemini-3.8-flash" 
     }
+  
 ];
 export default availableModels;
