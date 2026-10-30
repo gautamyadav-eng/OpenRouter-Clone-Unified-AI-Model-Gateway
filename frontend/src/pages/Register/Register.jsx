@@ -35,9 +35,8 @@ export default function Signup() {
           toast.error(data.message);
         }
       }else {
-        const {data} = await axios.post("http://localhost:3000/api/auth/login",{
-          email, password
-        });
+        const {data} = await axios.post("http://localhost:3000/api/auth/login",{email, password}, {withCredentials:true}
+      );
 
         if(data.success){
           toast.success("Login Successfully!")

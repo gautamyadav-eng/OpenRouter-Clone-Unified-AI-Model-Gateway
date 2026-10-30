@@ -1,4 +1,4 @@
-
+import { useState } from "react";
 import {
   KeyRound,
   ShieldCheck,
@@ -11,6 +11,13 @@ import CreateKey from "./createKey.jsx";
 import KeyList from "./keyList.jsx";
 
 const ApiKeys = () => {
+
+  const [refreshKey, setRefreshKey] = useState(0);
+  const [keyStats, setKeyStats] = useState({
+    total:0,
+    active:0
+  });
+
   return (
     <div className="min-h-screen bg-gray-50/70 px-4 py-8 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl space-y-8">
@@ -53,7 +60,7 @@ const ApiKeys = () => {
             </div>
 
             <p className="mt-5 text-sm text-gray-500">Total API Keys</p>
-            <h2 className="mt-1 text-3xl font-bold text-gray-900">3</h2>
+            <h2 className="mt-1 text-3xl font-bold text-gray-900">{keyStats.total}</h2>
             <p className="mt-2 text-xs text-gray-400">
               Keys created for your projects
             </p>
@@ -70,7 +77,7 @@ const ApiKeys = () => {
             </div>
 
             <p className="mt-5 text-sm text-gray-500">Active Keys</p>
-            <h2 className="mt-1 text-3xl font-bold text-gray-900">2</h2>
+            <h2 className="mt-1 text-3xl font-bold text-gray-900">{keyStats.active}</h2>
             <p className="mt-2 text-xs text-gray-400">
               Keys available for API requests
             </p>
@@ -114,10 +121,10 @@ const ApiKeys = () => {
         </div>
 
         {/* Create Key Section */}
-        <CreateKey />
+        <CreateKey  onKeyCreated={() => setRefreshKey((prev) => prev + 1)} />
 
         {/* Existing Keys */}
-        <KeyList />
+        <KeyList refreshKey={refreshKey} onStatsChange={setKeyStats} />
       </div>
     </div>
   );

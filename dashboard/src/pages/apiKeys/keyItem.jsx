@@ -4,10 +4,14 @@ import {
   Copy,
   MoreHorizontal,
   Clock3,
+  Trash2
 } from "lucide-react";
+import { useState } from "react";
 
-const KeyItem = ({ apiKey }) => {
+const KeyItem = ({ apiKey, onRevoke }) => {
   const isActive = apiKey.status === "Active";
+
+  const [showMenu, setShowMenu] = useState(false);
 
   return (
     <tr className="group transition-colors duration-200 hover:bg-blue-50/40">
@@ -78,10 +82,28 @@ const KeyItem = ({ apiKey }) => {
         <button
           type="button"
           aria-label="More API key options"
+          onClick={() => setShowMenu(!showMenu)}
           className="rounded-lg p-2 text-gray-400 transition-colors duration-200 hover:bg-gray-100 hover:text-gray-900"
         >
           <MoreHorizontal size={19} />
         </button>
+
+         {showMenu && (
+    <div className="absolute right-0 z-10 mt-2 w-36 rounded-xl border border-gray-200 bg-white p-1 shadow-lg">
+      <button
+        type="button"
+        disabled={!isActive}
+        onClick={() => {
+          onRevoke(apiKey._id);
+          setShowMenu(false);
+        }}
+        className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-red-600 hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-40"
+      >
+        <Trash2 size={15} />
+        Revoke Key
+      </button>
+    </div>
+  )}
       </td>
     </tr>
   );

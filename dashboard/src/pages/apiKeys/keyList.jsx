@@ -1,4 +1,5 @@
-
+import { useEffect, useState } from "react";
+import axios from "axios";
 import { KeyRound, Search, SlidersHorizontal } from "lucide-react";
 import KeyItem from "./keyItem.jsx";
 
@@ -29,8 +30,84 @@ const apiKeys = [
   },
 ];
 
-const KeyList = () => {
-  return (
+const KeyList = ({refreshKey, onStatsChange}) => {
+
+  const [apiKeys, setApiKeys] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+
+  const fetchApiKey = async () => {
+    try{
+      setLoading(true)
+      setError("");
+
+    
+
+      const {data} = await axios.get("http://localhost:3000/api/keys",{
+       withCredentials:true
+      });
+
+      if(data.success){
+        setApiKeys(data.apiKeys);
+
+         onStatsChange?.({
+    total: data.apiKeys.length,
+    active: data.apiKeys.filter((key) => key.isActive).length,
+  });
+  
+      }
+    }catch(error){
+      if(error.response?.status === 404){
+        setApiKeys([]);
+        onStatsChange?.({ total: 0, active: 0 });
+      }else{
+        setError(error.response?.data?.message ||" Failed to fetch  API keys");
+      }
+    }finally{
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    fetchApiKey();
+  },[refreshKey]);
+
+  const handleRevoke = async(id) => {
+    try{
+      setError("");
+      const {data } = await axios.patch( `http://localhost:3000/api/keys/${id}`,
+      {},
+      { withCredentials: true })
+    
+    if (data.success) {
+      await fetchApiKey();
+    }
+  }catch (error) {
+  setError(
+    error.response?.data?.message || "Failed to revoke API key"
+  );
+  }
+};
+
+  if (loading) {
+    return <p className="py-10 text-center text-gray-500">Loading API keys...</p>;
+  }
+
+  if (error) {
+    return (
+      <div className="rounded-xl border border-gray-200 bg-white p-6 text-center">
+        <p className="text-sm text-red-600">{error}</p>
+        <button
+          onClick={fetchApiKey}
+          className="mt-3 rounded-lg bg-gray-900 px-4 py-2 text-sm text-white"
+        >
+          Retry
+        </button>
+      </div>
+    );
+  }
+   return (
     <section className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
       {/* Header */}
       <div className="flex flex-col gap-4 border-b border-gray-100 p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
@@ -91,7 +168,14 @@ const KeyList = () => {
 
           <tbody className="divide-y divide-gray-100">
             {apiKeys.map((apiKey) => (
-              <KeyItem key={apiKey.id} apiKey={apiKey} />
+              <KeyItem key={apiKey._id} 
+              apiKey={{...apiKey, status:apiKey.isActive ? "Active" : "Revoked",
+                createdAt: new Date(apiKey.createdAt).toLocaleDateString(),
+                lastUsed: "Not available",
+                key: "or_live_............",
+              }} 
+              onRevoke={handleRevoke}/>
+              
             ))}
           </tbody>
         </table>
@@ -99,7 +183,7 @@ const KeyList = () => {
 
       {/* Footer */}
       <div className="flex flex-col gap-2 border-t border-gray-100 px-6 py-4 text-xs text-gray-500 sm:flex-row sm:items-center sm:justify-between">
-        <p>Showing {apiKeys.length} sample API keys</p>
+        <p>Showing {apiKeys.length} API keys</p>
         <p>Secret keys are masked for security.</p>
       </div>
     </section>

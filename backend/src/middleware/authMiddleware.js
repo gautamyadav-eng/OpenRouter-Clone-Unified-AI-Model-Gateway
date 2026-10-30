@@ -23,7 +23,7 @@ const tokenMiddleware = async (req, res, next) => {
     next();
 }catch(error){
     console.log("token error", error.message);
-    return res.status(501).json({
+    return res.status(401).json({
         success:false,
         message:"Invalid and expired token"
     });
