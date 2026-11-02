@@ -7,7 +7,7 @@ import {
   Layers3,
 } from "lucide-react";
 
-const ModelSelector = () => {
+const ModelSelector = ({selectedModel, onModelChange}) => {
   return (
     <section className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm transition-all duration-300 hover:border-gray-300 hover:shadow-md sm:p-6">
 
@@ -35,17 +35,20 @@ const ModelSelector = () => {
 
           <div className="flex items-center justify-between rounded-xl border border-gray-200 bg-white px-4 py-3 transition-colors duration-200 hover:border-gray-400">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-50 text-lg font-bold text-emerald-700">
-                G
-              </div>
-              <div>
-                <p className="text-sm font-semibold">GPT</p>
-                <p className="mt-1 text-xs text-gray-500">OpenAI</p>
-              </div>
+             
+             <select
+  value={selectedModel}
+  onChange={(e) => onModelChange(e.target.value)}
+  className="w-full rounded-xl  bg-white px-4 py-3 text-sm font-semibold outline-none focus:border-violet-500"
+>
+  <option value="Gemini">Gemini</option>
+  <option value="GPT">GPT</option>
+  <option value="Claude">Claude</option>
+</select>
             </div>
-
-            <ChevronDown size={18} className="text-gray-400" />
+            
           </div>
+
         </div>
 
         {/* Provider Information */}
@@ -59,7 +62,13 @@ const ModelSelector = () => {
               <Cpu size={20} />
             </div>
             <div>
-              <p className="text-sm font-semibold text-gray-800">OpenAI</p>
+              <p className="text-sm font-semibold text-gray-800">
+  {selectedModel === "Gemini"
+    ? "GeminiAI"
+    : selectedModel === "Claude"
+      ? "Anthropic"
+      : "OpenAI"}
+</p>
               <p className="mt-1 text-xs text-gray-500">
                 Selected model provider
               </p>

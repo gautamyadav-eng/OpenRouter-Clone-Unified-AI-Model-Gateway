@@ -1,10 +1,54 @@
-
+import { useState } from "react";
 import { Sparkles, Terminal, ShieldCheck } from "lucide-react";
 import ModelSelector from "./modelSelector.jsx";
 import PromptInput from "./promptInput.jsx";
 import ResponsePanel from "./responsePanel.jsx";
+import axios from "axios";
 
 const Playground = () => {
+
+  const [apikey, setApiKey] = useState("");
+  const [selectModel, setSelectModel] = useState("Gemini");
+  const [prompt, setPrompt] = useState("");
+  const [response, setResponse] = useState("");
+  const[loading, setLoading] = useState(false);
+  const [error,setError] = useState("");
+  const [responseTime, setResponseTime] = useState(null);
+
+    const startTime = Date.now();
+  const handleSend = async () =>{
+    if(!apikey.trim() || !prompt.trim()){
+      setError("API key or prompt are required");
+      return;
+    }
+
+    try{
+      setLoading(true)
+      setError("");
+      setResponse("");
+
+      const result = await axios.post("http://localhost:3000/api/chat",{
+        prompt,
+        model:selectModel,
+      },{
+        headers:{
+          Authorization:`Bearer ${apikey.trim()}`,
+        },
+      });
+      setResponse(result.data.data);
+        setResponseTime(Date.now() - startTime);
+    }catch(error){
+      console.log("Playground Error:", error);
+
+        console.log("API Error Response:", error.response?.data);
+      setError(error.response?.data?.message||"Something went wrong.");
+    }finally{
+      setLoading(false);
+    }
+  };
+
+ 
+
   return (
     <main className="min-h-screen bg-gray-50 px-4 py-8 text-gray-900 sm:px-6 lg:px-10">
       <div className="mx-auto max-w-7xl space-y-8">
@@ -54,13 +98,27 @@ const Playground = () => {
           </div>
         </section>
 
-        {/* Model Selection */}
-        <ModelSelector />
+      <div className="rounded-xl border border-gray-200 bg-white p-4">
+  <label className="mb-2 block text-sm font-semibold">
+    API Key
+  </label>
+
+  <input
+    type="password"
+    value={apikey}
+    onChange={(e) => setApiKey(e.target.value)}
+    placeholder="Paste your generated API key"
+    className="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm outline-none focus:border-violet-500"
+  />
+</div>
+
+        <ModelSelector   selectedModel={selectModel}
+  onModelChange={setSelectModel} />
 
         {/* Prompt and Response */}
         <section className="grid grid-cols-1 items-start gap-6 xl:grid-cols-2">
-          <PromptInput />
-          <ResponsePanel />
+          <PromptInput  prompt={prompt} setPrompt={setPrompt} onSend={handleSend} loading={loading} />
+          <ResponsePanel  response={response} selectModel={selectModel} loading={loading} error={error} responseTime={responseTime} />
         </section>
 
       </div>

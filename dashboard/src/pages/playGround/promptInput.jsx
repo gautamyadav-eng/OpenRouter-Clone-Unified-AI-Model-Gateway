@@ -7,7 +7,7 @@ import {
   Sparkles,
 } from "lucide-react";
 
-const PromptInput = () => {
+const PromptInput = ({prompt, setPrompt, onSend, loading}) => {
   return (
     <section className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition-all duration-300 hover:border-gray-300 hover:shadow-md">
 
@@ -50,11 +50,13 @@ const PromptInput = () => {
             <label className="text-sm font-medium text-gray-700">
               Your Prompt
             </label>
-            <span className="text-xs text-gray-400">0 / 10,000</span>
+            <span className="text-xs text-gray-400">{prompt.length}/10,000</span>
           </div>
 
           <textarea
             rows={8}
+            value={prompt}
+            onChange={(e) => setPrompt(e.target.value)}
             placeholder="Ask anything... For example, explain JavaScript closures with a simple example."
             className="w-full resize-y rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm leading-6 text-gray-700 outline-none transition-all duration-200 placeholder:text-gray-400 hover:border-gray-300 focus:border-gray-400 focus:ring-2 focus:ring-gray-100"
           />
@@ -66,10 +68,10 @@ const PromptInput = () => {
                 <span>Attach file</span>
               </div>
 
-              <div className="flex items-center gap-1.5 rounded-lg px-2.5 py-2 text-xs text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-800">
+              <button onClick={() => setPrompt("")} className="flex items-center gap-1.5 rounded-lg px-2.5 py-2 text-xs text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-800">
                 <RotateCcw size={15} />
                 <span>Reset</span>
-              </div>
+              </button>
             </div>
 
             <span className="text-xs text-gray-400">
@@ -81,10 +83,12 @@ const PromptInput = () => {
         {/* Send Button UI */}
         <button
           type="button"
+          onClick={onSend}
+          disabled={loading}
           className="flex w-full items-center justify-center gap-2 rounded-xl bg-gray-900 px-5 py-3 text-sm font-semibold text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-gray-800 hover:shadow-lg active:translate-y-0 sm:w-auto"
         >
           <Sparkles size={17} />
-          <span>Send Prompt</span>
+          <span>{loading ? "Generating..." : "Send Prompt"}</span>
           <Send size={15} />
         </button>
 

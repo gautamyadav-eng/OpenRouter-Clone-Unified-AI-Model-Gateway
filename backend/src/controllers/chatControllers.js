@@ -4,6 +4,7 @@ import RequestLog from "../models/RequestLog.js";
 const chatControllers =async (req, res) => {
     console.log(req.apiKey);
     const {prompt, model} = req.body;
+    console.log("Playground request:", { prompt, model });
 
     if(!prompt || !model){
         return res.status(400).json({
@@ -22,6 +23,7 @@ const chatControllers =async (req, res) => {
     }
     try{
     const startTime = Date.now();
+    console.log("Calling AI provider:", selectedModel.provider, selectedModel.modelId);
    const result = await callProvider(
     selectedModel.provider, 
     selectedModel.modelId, 
