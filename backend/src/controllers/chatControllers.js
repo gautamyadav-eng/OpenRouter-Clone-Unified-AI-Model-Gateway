@@ -3,7 +3,7 @@ import callProvider from "../services/aiProviderServices.js";
 import RequestLog from "../models/RequestLog.js";
 const chatControllers =async (req, res) => {
     console.log(req.apiKey);
-    const {prompt, model} = req.body;
+    const {prompt, model, systemInstruction} = req.body;
     console.log("Playground request:", { prompt, model });
 
     if(!prompt || !model){
@@ -23,17 +23,18 @@ const chatControllers =async (req, res) => {
     }
     try{
     const startTime = Date.now();
-    console.log("Calling AI provider:", selectedModel.provider, selectedModel.modelId);
+   
    const result = await callProvider(
     selectedModel.provider, 
     selectedModel.modelId, 
-    prompt
+    prompt,
+    systemInstruction
 );
 
 const responseTime = Date.now() -startTime;
 try{
 await RequestLog.create({
-    apiKeyId : req.apiKey._Id,
+    apiKeyId : req.apiKey._id,
     provider: selectedModel.provider,
     model: selectedModel.modelId,
     status:"success",

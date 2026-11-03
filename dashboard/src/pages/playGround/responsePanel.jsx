@@ -1,4 +1,6 @@
-
+import { useState } from "react";
+import ReactMarkdown from "react-markdown"
+import remarkGfm from "remark-gfm"
 import {
   Bot,
   Copy,
@@ -12,6 +14,20 @@ import {
 } from "lucide-react";
 
 const ResponsePanel = ({response, selectModel, loading, error, responseTime}) => {
+
+  const [copy, setCopy] = useState(false);
+  const handleCopy = async() =>{
+    if(!response) return;
+
+    try{
+      await navigator.clipboard.writeText(response);
+      setCopy(true);
+      setTimeout(() => setCopy(false),2000);
+    }catch(error){
+      console.log("copy error:", error);
+    }
+
+  };
   return (
       <section className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition-all duration-300 hover:border-gray-300 hover:shadow-md">
 
@@ -61,7 +77,11 @@ const ResponsePanel = ({response, selectModel, loading, error, responseTime}) =>
           {error ? (
             <p className="text-sm text-red-600">{error}</p>
           ) : response ? (
-            <p className="whitespace-pre-wrap text-gray-700">{response}</p>
+            <p className="whitespace-pre-wrap text-gray-700">
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                {response}
+              </ReactMarkdown>
+            </p>
           ) : (
             <p className="text-gray-400">
               {loading
@@ -82,10 +102,13 @@ const ResponsePanel = ({response, selectModel, loading, error, responseTime}) =>
           <span>{response ? "Response received" : "No response yet"}</span>
         </div>
 
-        <div className="flex items-center gap-2 rounded-lg border border-gray-200 px-3 py-2 text-sm font-medium text-gray-600 transition-all duration-200 hover:border-gray-400 hover:bg-gray-50 hover:text-gray-900">
-          <Copy size={15} />
-          <span>Copy response</span>
-        </div>
+        <button 
+        onClick={handleCopy}
+        disabled={!response}
+         className="flex items-center gap-2 rounded-lg border border-gray-200 px-3 py-2 text-sm font-medium text-gray-600 transition-all duration-200 hover:border-gray-400 hover:bg-gray-50 hover:text-gray-900">
+          {copy ? <CheckCircle2 size={15} /> : <Copy size={15} />}
+          <span>{copy ? "Copied!" : "Copy response"}</span>
+        </button>
       </div>
 
       {/* Response Metrics */}

@@ -6,12 +6,15 @@ const client = new GoogleGenAI({
   apiKey: process.env.GEMINI_API_KEY,
 });
 
-const geminiAIService = async (prompt, modelId) => {
+const geminiAIService = async (prompt, modelId,systemInstruction ) => {
   for (let attempt = 0; attempt < 3; attempt += 1) {
     try {
       const response = await client.models.generateContent({
         model: modelId,
         contents: prompt,
+        config:{
+          systemInstruction:systemInstruction || undefined
+        }
       });
       return response.text;
     } catch (error) {

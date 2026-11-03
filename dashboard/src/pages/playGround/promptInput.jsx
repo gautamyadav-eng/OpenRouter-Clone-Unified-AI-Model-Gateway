@@ -7,7 +7,7 @@ import {
   Sparkles,
 } from "lucide-react";
 
-const PromptInput = ({prompt, setPrompt, onSend, loading}) => {
+const PromptInput = ({prompt, setPrompt, onSend, onReset, loading ,  systemInstruction, setSystemInstruction}) => {
   return (
     <section className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition-all duration-300 hover:border-gray-300 hover:shadow-md">
 
@@ -39,6 +39,8 @@ const PromptInput = ({prompt, setPrompt, onSend, loading}) => {
           </label>
           <textarea
             rows={3}
+            value={systemInstruction}
+            onChange={(e) => setSystemInstruction(e.target.value)}
             placeholder="You are a helpful AI assistant..."
             className="w-full resize-y rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm leading-6 text-gray-700 outline-none transition-all duration-200 placeholder:text-gray-400 hover:border-gray-300 focus:border-gray-400 focus:bg-white"
           />
@@ -68,7 +70,7 @@ const PromptInput = ({prompt, setPrompt, onSend, loading}) => {
                 <span>Attach file</span>
               </div>
 
-              <button onClick={() => setPrompt("")} className="flex items-center gap-1.5 rounded-lg px-2.5 py-2 text-xs text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-800">
+              <button onClick={onReset} className="flex items-center gap-1.5 rounded-lg px-2.5 py-2 text-xs text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-800">
                 <RotateCcw size={15} />
                 <span>Reset</span>
               </button>

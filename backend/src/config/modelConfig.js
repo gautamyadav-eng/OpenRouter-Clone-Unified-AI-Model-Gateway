@@ -12,7 +12,7 @@ const availableModels = [
     {
       name:"Gemini",
         provider:"GeminiAI",
-        modelId:"gemini-3.8-flash" 
+        modelId:"gemini-3.5-flash-lite" 
     }
   
 ];

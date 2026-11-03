@@ -14,6 +14,7 @@ const Playground = () => {
   const[loading, setLoading] = useState(false);
   const [error,setError] = useState("");
   const [responseTime, setResponseTime] = useState(null);
+  const [systemInstruction, setSystemInstruction] = useState("");
 
     const startTime = Date.now();
   const handleSend = async () =>{
@@ -30,22 +31,28 @@ const Playground = () => {
       const result = await axios.post("http://localhost:3000/api/chat",{
         prompt,
         model:selectModel,
+        systemInstruction
       },{
         headers:{
           Authorization:`Bearer ${apikey.trim()}`,
         },
       });
-      setResponse(result.data.data);
+      setResponse(result.data.data.response);
         setResponseTime(Date.now() - startTime);
     }catch(error){
-      console.log("Playground Error:", error);
-
-        console.log("API Error Response:", error.response?.data);
+     
       setError(error.response?.data?.message||"Something went wrong.");
     }finally{
       setLoading(false);
     }
   };
+
+  const handleReset = () => {
+  setPrompt("");
+  setResponse("");
+  setError("");
+  setResponseTime(null);
+};
 
  
 
@@ -117,7 +124,7 @@ const Playground = () => {
 
         {/* Prompt and Response */}
         <section className="grid grid-cols-1 items-start gap-6 xl:grid-cols-2">
-          <PromptInput  prompt={prompt} setPrompt={setPrompt} onSend={handleSend} loading={loading} />
+          <PromptInput  prompt={prompt} setPrompt={setPrompt} onSend={handleSend} onReset={handleReset} loading={loading} systemInstruction={systemInstruction} setSystemInstruction={setSystemInstruction} />
           <ResponsePanel  response={response} selectModel={selectModel} loading={loading} error={error} responseTime={responseTime} />
         </section>
 
