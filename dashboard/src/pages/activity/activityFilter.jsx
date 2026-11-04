@@ -1,7 +1,7 @@
 
 import { Search, CalendarDays, SlidersHorizontal } from "lucide-react";
 
-const ActivityFilters = () => {
+const ActivityFilters = ({search, setSearch, dateRange, setDateRange, status, setStatus}) => {
   return (
     <div className="flex flex-col gap-3 border-b border-gray-100 p-5 sm:flex-row sm:items-center sm:justify-between sm:px-6">
       <div className="relative w-full sm:max-w-xs">
@@ -37,7 +37,7 @@ const ActivityFilters = () => {
           >
             <option value="all">All Statuses</option>
             <option value="success">Success</option>
-            <option value="error">Failed</option>
+            <option value="failed">Failed</option>
             <option value="pending">Pending</option>
           </select>
         </div>

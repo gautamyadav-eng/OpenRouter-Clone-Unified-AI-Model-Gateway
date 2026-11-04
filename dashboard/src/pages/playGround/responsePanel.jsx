@@ -13,20 +13,46 @@ import {
   Zap,
 } from "lucide-react";
 
-const ResponsePanel = ({response, selectModel, loading, error, responseTime}) => {
+const ResponsePanel = ({response,setResponse, selectModel, loading, error, responseTime, setResponseTime}) => {
 
   const [copy, setCopy] = useState(false);
+  const [openMenu, setOpenMenu] = useState(false);
+
   const handleCopy = async() =>{
     if(!response) return;
 
     try{
       await navigator.clipboard.writeText(response);
       setCopy(true);
+      setOpenMenu(false);
       setTimeout(() => setCopy(false),2000);
     }catch(error){
       console.log("copy error:", error);
     }
 
+  };
+  const handleClear = () => {
+  setResponse("");
+  setResponseTime(null);
+  setCopy(false);
+  setMenuOpen(false);
+};
+
+  const handleDownload = () =>{
+    if(!response) return ;
+
+    const blob = new Blob([response], {
+      type: "text/plain;charset=utf-8",
+    });
+
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+
+    link.href = url;
+    link.download = "ai-response.txt";
+    link.click();
+
+    URL.revokeObjectURL(url);
   };
   return (
       <section className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition-all duration-300 hover:border-gray-300 hover:shadow-md">
@@ -51,8 +77,44 @@ const ResponsePanel = ({response, selectModel, loading, error, responseTime}) =>
           Preview
         </span>
 
-        <div className="rounded-lg p-2 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-700">
+        <div className="relative">
+        <button onClick={() => setOpenMenu(!openMenu)} className="rounded-lg p-2 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-700">
           <MoreHorizontal size={19} />
+          </button>
+
+          {openMenu && (
+    <div className="absolute right-0 top-10 z-20 w-44 rounded-xl border border-gray-200 bg-white p-1 shadow-lg">
+      <button
+        onClick={handleClear}
+        disabled={!response}
+        className="w-full rounded-lg px-3 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 disabled:opacity-80"
+      >
+        Clear Response
+      </button>
+
+      <button
+        onClick={() => {
+          handleCopy();
+          setOpenMenu(false);
+        }}
+        disabled={!response}
+        className="w-full rounded-lg px-3 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 disabled:opacity-80"
+      >
+        Copy Response
+      </button>
+
+      <button
+        onClick={() => {
+          handleDownload();
+          setOpenMenu(false);
+        }}
+        disabled={!response}
+        className="w-full rounded-lg px-3 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 disabled:opacity-80"
+      >
+        Download Response
+      </button>
+    </div>
+  )}
         </div>
       </div>
     </div>

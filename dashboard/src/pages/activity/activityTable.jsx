@@ -64,7 +64,17 @@ const requests = [
   },
 ];
 
-const ActivityTable = () => {
+
+const ActivityTable = ({search, dateRange,status}) => {
+  const filteredRequests =  requests.filter((request) =>{
+    const matchesSearch =
+    request.model.toLowerCase().includes(search.toLowerCase()) || request.provider.toLowerCase().includes(search.toLowerCase());
+  
+    const matchesStatus = 
+    status === "all" || request.status.toLowerCase() === status;
+  
+    return matchesSearch && matchesStatus;
+  });
   return (
     <>
       <div className="overflow-x-auto">
@@ -82,7 +92,7 @@ const ActivityTable = () => {
           </thead>
 
           <tbody className="divide-y divide-gray-100">
-            {requests.map((request) => (
+            {filteredRequests.map((request) => (
               <ActivityRow key={request.id} request={request} />
             ))}
           </tbody>
@@ -90,7 +100,7 @@ const ActivityTable = () => {
       </div>
 
       <div className="flex flex-col gap-2 border-t border-gray-100 px-6 py-4 text-xs text-gray-500 sm:flex-row sm:items-center sm:justify-between">
-        <p>Showing {requests.length} sample requests</p>
+        <p>Showing  {filteredRequests.length} sample requests</p>
         <p>Request details are displayed for UI preview only.</p>
       </div>
     </>

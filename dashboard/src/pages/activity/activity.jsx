@@ -1,4 +1,4 @@
-
+import { useState } from "react";
 import {
   Activity as ActivityIcon,
   Activity,
@@ -12,6 +12,10 @@ import ActivityFilters from "./activityFilter.jsx";
 import ActivityTable from "./activityTable.jsx";
 
 const ActivityPage = () => {
+  const [search, setSearch] = useState("");
+  const [dateRange, setDateRange] = useState("24h");
+  const [status, setStatus] = useState("all");
+
   return (
     <div className="min-h-screen bg-gray-50/70 px-4 py-8 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl space-y-8">
@@ -99,8 +103,8 @@ const ActivityPage = () => {
             </p>
           </div>
 
-          <ActivityFilters />
-          <ActivityTable />
+          <ActivityFilters search={search} setSearch={setSearch} dateRange={dateRange} setDateRange={setDateRange} status={status} setStatus={setStatus} />
+          <ActivityTable search={search} dateRange={dateRange} status={status} />
         </section>
       </div>
     </div>

@@ -125,7 +125,7 @@ const Playground = () => {
         {/* Prompt and Response */}
         <section className="grid grid-cols-1 items-start gap-6 xl:grid-cols-2">
           <PromptInput  prompt={prompt} setPrompt={setPrompt} onSend={handleSend} onReset={handleReset} loading={loading} systemInstruction={systemInstruction} setSystemInstruction={setSystemInstruction} />
-          <ResponsePanel  response={response} selectModel={selectModel} loading={loading} error={error} responseTime={responseTime} />
+          <ResponsePanel  response={response} setResponse={setResponse} selectModel={selectModel} loading={loading} error={error} responseTime={responseTime} setResponseTime={setResponseTime} />
         </section>
 
       </div>

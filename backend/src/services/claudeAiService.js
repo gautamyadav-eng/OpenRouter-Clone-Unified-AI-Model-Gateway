@@ -3,10 +3,11 @@ import Anthropic from "@anthropic-ai/sdk";
 const client = new Anthropic({
     apiKey:process.env.ANTHROPIC_API_KEY
 })
-const claudeAIService = async(prompt, modelId) => {
+const claudeAIService = async(prompt, modelId,systemInstruction) => {
     const response = await client.messages.create({
         model : modelId,
         max_tokens: 1024,
+        system: systemInstruction || undefined,
         messages:[{
             role:"user",
             content:prompt
