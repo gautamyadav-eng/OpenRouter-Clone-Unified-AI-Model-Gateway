@@ -23,6 +23,7 @@ const ActivityFilters = ({search, setSearch, dateRange, setDateRange, status, se
             defaultValue="24h"
             className="bg-transparent text-sm text-gray-700 outline-none"
           >
+             <option value="24h">All time</option>
             <option value="24h">Last 24 hours</option>
             <option value="7d">Last 7 days</option>
             <option value="30d">Last 30 days</option>

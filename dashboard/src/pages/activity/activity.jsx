@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
+import axios from "axios";
 import {
   Activity as ActivityIcon,
   Activity,
@@ -13,8 +14,38 @@ import ActivityTable from "./activityTable.jsx";
 
 const ActivityPage = () => {
   const [search, setSearch] = useState("");
-  const [dateRange, setDateRange] = useState("24h");
+  const [dateRange, setDateRange] = useState("all");
   const [status, setStatus] = useState("all");
+  const [logs, setLogs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+ 
+
+  useEffect(() => {
+    const fetechLog = async() => {
+      try{
+        const data = await axios.get("http://localhost:3000/api/logs", {withCredentials:true});
+
+        setLogs(data.data.logs || []);
+      }catch(error){
+        console.log("Activity logs fetch error:",error);
+        setError(error.response?.data?.message || "Failed to fetch activity logs");
+      }finally{
+        setLoading(false);
+      }
+    }
+    fetechLog();
+  }, []);
+
+  const totalRequests = logs.length;
+
+  const successFullRequests =  logs.filter(
+    (logs) => logs.status === "success"
+  ).length;
+
+  const successRate = totalRequests ? ((successFullRequests/totalRequests) *100).toFixed(1): "0.0";
+
+  const avgLatency = totalRequests  ? Math.round(logs.reduce((total, log) => total + (log.responseTime || 0), 0)/ totalRequests) :0;
 
   return (
     <div className="min-h-screen bg-gray-50/70 px-4 py-8 sm:px-6 lg:px-8">
@@ -48,7 +79,7 @@ const ActivityPage = () => {
               <span className="text-xs text-gray-400">ALL REQUESTS</span>
             </div>
             <p className="mt-5 text-sm text-gray-500">Total Requests</p>
-            <h2 className="mt-1 text-3xl font-bold text-gray-900">1,284</h2>
+            <h2 className="mt-1 text-3xl font-bold text-gray-900">{totalRequests.toLocaleString()}</h2>
             <p className="mt-2 text-xs text-gray-400">Sample usage data</p>
           </div>
 
@@ -60,7 +91,7 @@ const ActivityPage = () => {
               <span className="text-xs text-gray-400">SUCCESSFUL</span>
             </div>
             <p className="mt-5 text-sm text-gray-500">Success Rate</p>
-            <h2 className="mt-1 text-3xl font-bold text-gray-900">98.4%</h2>
+            <h2 className="mt-1 text-3xl font-bold text-gray-900">{successRate}%</h2>
             <p className="mt-2 text-xs text-gray-400">Successful API requests</p>
           </div>
 
@@ -72,7 +103,7 @@ const ActivityPage = () => {
               <span className="text-xs text-gray-400">PERFORMANCE</span>
             </div>
             <p className="mt-5 text-sm text-gray-500">Avg. Latency</p>
-            <h2 className="mt-1 text-3xl font-bold text-gray-900">842 ms</h2>
+            <h2 className="mt-1 text-3xl font-bold text-gray-900">{avgLatency} ms</h2>
             <p className="mt-2 text-xs text-gray-400">Average response time</p>
           </div>
 
@@ -84,7 +115,7 @@ const ActivityPage = () => {
               <span className="text-xs text-gray-400">TOKEN USAGE</span>
             </div>
             <p className="mt-5 text-sm text-gray-500">Tokens Used</p>
-            <h2 className="mt-1 text-3xl font-bold text-gray-900">84.2K</h2>
+            <h2 className="mt-1 text-3xl font-bold text-gray-900">-</h2>
             <p className="mt-2 text-xs text-gray-400">Sample token consumption</p>
           </div>
         </div>
@@ -104,7 +135,7 @@ const ActivityPage = () => {
           </div>
 
           <ActivityFilters search={search} setSearch={setSearch} dateRange={dateRange} setDateRange={setDateRange} status={status} setStatus={setStatus} />
-          <ActivityTable search={search} dateRange={dateRange} status={status} />
+          <ActivityTable logs={logs} loading={loading} error={error} search={search} dateRange={dateRange} status={status} />
         </section>
       </div>
     </div>

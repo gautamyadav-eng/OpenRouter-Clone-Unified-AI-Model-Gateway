@@ -1,80 +1,43 @@
 
 import ActivityRow from "./requestDetails.jsx";
 
-const requests = [
-  {
-    id: 1,
-    model: "GPT-4o",
-    provider: "OpenAI",
-    method: "POST",
-    status: "Success",
-    tokens: "1,240",
-    latency: "624 ms",
-    time: "2 min ago",
-  },
-  {
-    id: 2,
-    model: "Claude 3.5 Sonnet",
-    provider: "Anthropic",
-    method: "POST",
-    status: "Success",
-    tokens: "2,180",
-    latency: "912 ms",
-    time: "8 min ago",
-  },
-  {
-    id: 3,
-    model: "Gemini 2.0 Flash",
-    provider: "Google",
-    method: "POST",
-    status: "Failed",
-    tokens: "—",
-    latency: "1.2 s",
-    time: "15 min ago",
-  },
-  {
-    id: 4,
-    model: "GPT-4o",
-    provider: "OpenAI",
-    method: "POST",
-    status: "Success",
-    tokens: "860",
-    latency: "578 ms",
-    time: "28 min ago",
-  },
-  {
-    id: 5,
-    model: "Claude 3.5 Sonnet",
-    provider: "Anthropic",
-    method: "POST",
-    status: "Success",
-    tokens: "3,420",
-    latency: "1.1 s",
-    time: "42 min ago",
-  },
-  {
-    id: 6,
-    model: "GPT-4o",
-    provider: "OpenAI",
-    method: "POST",
-    status: "Pending",
-    tokens: "—",
-    latency: "—",
-    time: "Just now",
-  },
-];
+const ActivityTable = ({logs, loading, error, search, dateRange,status}) => {
 
 
-const ActivityTable = ({search, dateRange,status}) => {
-  const filteredRequests =  requests.filter((request) =>{
-    const matchesSearch =
-    request.model.toLowerCase().includes(search.toLowerCase()) || request.provider.toLowerCase().includes(search.toLowerCase());
-  
-    const matchesStatus = 
-    status === "all" || request.status.toLowerCase() === status;
-  
-    return matchesSearch && matchesStatus;
-  });
+ const filteredRequests = logs.filter((request) => {
+  const model = (request.model || "").toLowerCase();
+  const provider = (request.provider || "").toLowerCase();
+  const requestStatus = (request.status || "").toLowerCase();
+
+  const matchesSearch =
+    model.includes(search.toLowerCase()) ||
+    provider.includes(search.toLowerCase());
+
+  const matchesStatus =
+    status === "all" || requestStatus === status;
+
+  const logDate = new Date(request.createdAt);
+  const now = new Date();
+
+  const rangeMs =
+    dateRange === "all"
+    ? Infinity
+    : dateRange === "24h"
+    ? 24 * 60 * 60 * 1000
+    : dateRange === "7d"
+    ? 7 * 24 * 60 * 60 * 1000
+    : 30 * 24 * 60 * 60 * 1000;
+
+
+  const matchesDate =
+    !isNaN(logDate.getTime()) &&
+    now - logDate >= 0 &&
+    now - logDate <= rangeMs;
+
+  return matchesSearch && matchesStatus && matchesDate;
+});
+
+
   return (
     <>
       <div className="overflow-x-auto">
@@ -92,16 +55,36 @@ const ActivityTable = ({search, dateRange,status}) => {
           </thead>
 
           <tbody className="divide-y divide-gray-100">
-            {filteredRequests.map((request) => (
-              <ActivityRow key={request.id} request={request} />
-            ))}
+           {loading ? (
+  <tr>
+    <td colSpan="7" className="px-6 py-10 text-center text-gray-500">
+      Loading activity logs...
+    </td>
+  </tr>
+) : error ? (
+  <tr>
+    <td colSpan="7" className="px-6 py-10 text-center text-red-500">
+      {error}
+    </td>
+  </tr>
+) : filteredRequests.length === 0 ? (
+  <tr>
+    <td colSpan="7" className="px-6 py-10 text-center text-gray-500">
+      No activity logs found.
+    </td>
+  </tr>
+) : (
+  filteredRequests.map((request) => (
+    <ActivityRow key={request._id} request={request} />
+  ))
+)}
           </tbody>
         </table>
       </div>
 
       <div className="flex flex-col gap-2 border-t border-gray-100 px-6 py-4 text-xs text-gray-500 sm:flex-row sm:items-center sm:justify-between">
-        <p>Showing  {filteredRequests.length} sample requests</p>
-        <p>Request details are displayed for UI preview only.</p>
+       <p>Showing {filteredRequests.length} of {logs.length} requests</p>
+<p>Activity logs fetched from your account.</p>
       </div>
     </>
   );

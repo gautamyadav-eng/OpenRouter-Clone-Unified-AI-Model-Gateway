@@ -3,16 +3,14 @@ import { ArrowUpRight, CheckCircle2, XCircle, Clock3 } from "lucide-react";
 
 const ActivityRow = ({ request }) => {
   const statusStyles = {
-    Success: "bg-green-50 text-green-700 ring-green-200",
-    Failed: "bg-red-50 text-red-700 ring-red-200",
-    Pending: "bg-yellow-50 text-yellow-700 ring-yellow-200",
-  };
+  success: "bg-green-50 text-green-700 ring-green-200",
+  failed: "bg-red-50 text-red-700 ring-red-200",
+};
 
-  const StatusIcon = {
-    Success: CheckCircle2,
-    Failed: XCircle,
-    Pending: Clock3,
-  }[request.status] || Clock3;
+const StatusIcon = {
+  success: CheckCircle2,
+  failed: XCircle,
+}[request.status] || Clock3;
 
   return (
     <tr className="group transition-colors duration-200 hover:bg-blue-50/40">
@@ -27,7 +25,7 @@ const ActivityRow = ({ request }) => {
       {/* Method */}
       <td className="px-6 py-5">
         <span className="rounded-md bg-blue-50 px-2 py-1 font-mono text-xs font-medium text-blue-700">
-          {request.method}
+          -
         </span>
       </td>
 
@@ -45,17 +43,17 @@ const ActivityRow = ({ request }) => {
 
       {/* Tokens */}
       <td className="px-6 py-5 text-sm tabular-nums text-gray-600">
-        {request.tokens}
+        -
       </td>
 
       {/* Latency */}
       <td className="px-6 py-5 text-sm tabular-nums text-gray-600">
-        {request.latency}
+       {request.responseTime} ms
       </td>
 
       {/* Time */}
       <td className="whitespace-nowrap px-6 py-5 text-sm text-gray-500">
-        {request.time}
+       {new Date(request.createdAt).toLocaleString()}
       </td>
 
       {/* Details - UI Only */}
