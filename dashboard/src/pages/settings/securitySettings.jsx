@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import {
   ShieldCheck,
   LockKeyhole,
@@ -10,6 +11,7 @@ import {
 } from "lucide-react";
 
 const Security = () => {
+  const navigate = useNavigate();
   const securityOptions = [
     {
       title: "Password",
@@ -123,6 +125,13 @@ const Security = () => {
 
                   <button
                     type="button"
+                    onClick={() => {
+                      if(option.action === "Change Password"){
+                        window.location.href = "http://localhost:5173/reset-password";
+                      }else if(option.action === "Manage Keys"){
+                        navigate("/apikeys");
+                      }
+                    }}
                     className="inline-flex w-fit shrink-0 items-center gap-2 rounded-lg border border-gray-200 bg-white px-3.5 py-2 text-sm font-medium text-gray-700 transition-colors hover:border-gray-300 hover:bg-gray-100"
                   >
                     {option.action}

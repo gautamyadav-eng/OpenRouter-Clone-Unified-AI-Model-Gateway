@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, Activity } from "react";
 import axios from "axios";
 
 const statsData = [
@@ -32,7 +32,8 @@ const statsData = [
 const Stats = () => {
 
   const [modelCount, setModelCount] = useState(0);
-  const [apiKeyCount, setApiKeyCount] = useState(0)
+  const [apiKeyCount, setApiKeyCount] = useState(0);
+  const [totalRequests, setTotalRequests] = useState(0);
 
   useEffect(() => {
     const fetchModel = async () =>{
@@ -70,6 +71,27 @@ const Stats = () => {
     fetchApiKey();
   }, []);
 
+  useEffect(() => {
+    const activityRequest = async() => {
+      try{
+        const {data} = await axios.get("http://localhost:3000/api/logs", {
+          withCredentials: true,
+        });
+
+        if(data.success){
+          setTotalRequests(data.totalRequests);
+        }
+      }catch(error){
+        if(error.response?.status === 404){
+         setTotalRequests(0);
+          return;
+        }
+        console.log("activity request fetch error:", error);
+      }
+    };
+    activityRequest();
+  }, []);
+
   const liveStatsData = statsData.map((stat) =>{
     if(stat.title === 'Available Models'){
       return {...stat, value: modelCount} 
@@ -78,6 +100,13 @@ const Stats = () => {
     if(stat.title === "API Keys"){
       return {...stat, value:apiKeyCount};
     }
+     if(stat.title === "Total Requests"){
+      return {...stat, value:totalRequests};
+    }
+      if(stat.title === "Tokens Used"){
+      return {...stat, value:"-"};
+    }
+   
     return stat;
   }
   );

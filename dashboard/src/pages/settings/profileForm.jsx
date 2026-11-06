@@ -1,4 +1,6 @@
-import React from "react";
+
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import {
   UserRound,
   Mail,
@@ -11,38 +13,96 @@ import {
 } from "lucide-react";
 
 const Profile = () => {
-  const profileDetails = [
-    {
-      label: "Full Name",
-      value: "Gautam Yadav",
-      icon: UserRound,
-    },
-    {
-      label: "Email Address",
-      value: "gautam@example.com",
-      icon: Mail,
-    },
-    {
-      label: "Account Type",
-      value: "Developer",
-      icon: ShieldCheck,
-    },
-    {
-      label: "Member Since",
-      value: "October 2026",
-      icon: CalendarDays,
-    },
-  ];
 
+  const [profile, setProfile] = useState(null);
+const [loading, setLoading] = useState(true);
+const [error, setError] = useState("");
+const [apiKeyCount, setApiKeyCount] = useState(0);
+const [totalRequests, setTotalRequests] = useState(0);
+
+useEffect(() => {
+  const fetchProfile = async () => {
+    try {
+      const { data } = await axios.get(
+        "http://localhost:3000/api/profile",
+        { withCredentials: true }
+      );
+console.log("Profile API Response:", data);
+      setProfile(data.profile);
+    } catch (error) {
+      setError(
+        error.response?.data?.message || "Failed to load profile"
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchProfile();
+  fetchApiKeys();
+  fetchActivityLogs();
+}, []);
+
+const fetchApiKeys = async() => {
+  try{
+  const {data} = await axios.get( "http://localhost:3000/api/keys", {withCredentials:true});
+
+  setApiKeyCount(data.apiKeys.length);
+  }catch (error) {
+    console.log("API Keys fetch error:", error);
+  }
+}
+
+const fetchActivityLogs = async () => {
+  try {
+    const { data } = await axios.get(
+      "http://localhost:3000/api/logs",
+      { withCredentials: true }
+    );
+
+    setTotalRequests(data.totalRequests);
+  } catch (error) {
+    console.log("Activity logs fetch error:", error);
+  }
+};
+
+
+  const profileDetails = [
+  {
+    label: "Full Name",
+    value: profile?.name || "-",
+    icon: UserRound,
+  },
+  {
+    label: "Email Address",
+    value: profile?.email || "-",
+    icon: Mail,
+  },
+  {
+    label: "Account Type",
+    value: "Developer",
+    icon: ShieldCheck,
+  },
+  {
+    label: "Member Since",
+    value: profile?.createdAt
+      ? new Date(profile.createdAt).toLocaleDateString("en-IN", {
+          month: "long",
+          year: "numeric",
+        })
+      : "-",
+    icon: CalendarDays,
+  },
+];
   const accountStats = [
     {
       label: "API Keys",
-      value: "3",
+      value:  apiKeyCount,
       icon: KeyRound,
     },
     {
       label: "Total Requests",
-      value: "1,240",
+      value:totalRequests.toLocaleString("en-IN"),
       icon: Activity,
     },
     {
@@ -51,6 +111,21 @@ const Profile = () => {
       icon: CheckCircle2,
     },
   ];
+
+  if (loading) {
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-gray-50">
+      <p className="text-sm text-gray-500">Loading profile...</p>
+    </div>
+  );
+}
+if (error) {
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-gray-50">
+      <p className="text-sm text-red-500">{error}</p>
+    </div>
+  );
+}
 
   return (
     <main className="min-h-screen bg-gray-50 px-4 py-8 sm:px-6 lg:px-10">
@@ -74,16 +149,16 @@ const Profile = () => {
             {/* Profile Information */}
             <div className="flex min-w-0 items-center gap-4">
               <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-full bg-gray-900 text-2xl font-semibold text-white ring-4 ring-gray-100">
-                G
+               {profile?.name?.charAt(0).toUpperCase() || "U"}
               </div>
 
               <div className="min-w-0">
                 <h2 className="truncate text-xl font-semibold text-gray-900">
-                  Gautam Yadav
+                 {profile?.name || "-"}
                 </h2>
 
                 <p className="mt-1 break-all text-sm text-gray-500">
-                  gautam@example.com
+                  {profile?.email || "-"}
                 </p>
 
                 <div className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-green-50 px-3 py-1 text-xs font-medium text-green-700">

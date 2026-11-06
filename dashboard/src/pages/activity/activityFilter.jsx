@@ -1,5 +1,5 @@
 
-import { Search, CalendarDays, SlidersHorizontal } from "lucide-react";
+import { Search, CalendarDays, SlidersHorizontal, Target } from "lucide-react";
 
 const ActivityFilters = ({search, setSearch, dateRange, setDateRange, status, setStatus}) => {
   return (
@@ -11,6 +11,8 @@ const ActivityFilters = ({search, setSearch, dateRange, setDateRange, status, se
         />
         <input
           type="text"
+           value={search}
+          onChange={(e) => setSearch(e.target.value)}
           placeholder="Search requests or models..."
           className="w-full rounded-xl border border-gray-200 py-2.5 pl-9 pr-3 text-sm outline-none transition-all duration-200 placeholder:text-gray-400 hover:border-gray-300 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10"
         />
@@ -21,9 +23,11 @@ const ActivityFilters = ({search, setSearch, dateRange, setDateRange, status, se
           <CalendarDays size={16} className="text-gray-500" />
           <select
             defaultValue="24h"
+            value={dateRange}
+            onChange={(e) => setDateRange(e.target.value)}
             className="bg-transparent text-sm text-gray-700 outline-none"
           >
-             <option value="24h">All time</option>
+             <option value="all">All time</option>
             <option value="24h">Last 24 hours</option>
             <option value="7d">Last 7 days</option>
             <option value="30d">Last 30 days</option>
@@ -34,6 +38,8 @@ const ActivityFilters = ({search, setSearch, dateRange, setDateRange, status, se
           <SlidersHorizontal size={16} className="text-gray-500" />
           <select
             defaultValue="all"
+            value={status}
+            onChange={(e) => setStatus(e.target.value)}
             className="bg-transparent text-sm text-gray-700 outline-none"
           >
             <option value="all">All Statuses</option>
