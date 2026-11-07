@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 import {
   KeyRound,
   ShieldCheck,
@@ -17,7 +18,38 @@ const ApiKeys = () => {
     total:0,
     active:0
   });
+  const [requestsToday, setRequestsToday] = useState(0);
 
+  useEffect(() => {
+  const fetchTodayRequests = async () => {
+    try {
+      const { data } = await axios.get(
+        "http://localhost:3000/api/logs",
+        { withCredentials: true }
+      );
+
+      if (data.success) {
+        const today = new Date();
+
+        const todayCount = data.logs.filter((log) => {
+          const logDate = new Date(log.createdAt);
+
+          return (
+            logDate.getDate() === today.getDate() &&
+            logDate.getMonth() === today.getMonth() &&
+            logDate.getFullYear() === today.getFullYear()
+          );
+        }).length;
+
+        setRequestsToday(todayCount);
+      }
+    } catch (error) {
+      console.log("Today's requests error:", error);
+    }
+  };
+
+  fetchTodayRequests();
+}, []);
   return (
     <div className="min-h-screen bg-gray-50/70 px-4 py-8 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl space-y-8">
@@ -94,7 +126,7 @@ const ApiKeys = () => {
             </div>
 
             <p className="mt-5 text-sm text-gray-500">Requests Today</p>
-            <h2 className="mt-1 text-3xl font-bold text-gray-900">128</h2>
+            <h2 className="mt-1 text-3xl font-bold text-gray-900">{requestsToday}</h2>
             <p className="mt-2 text-xs text-gray-400">
               Sample dashboard usage
             </p>

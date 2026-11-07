@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { Paperclip, Send, SlidersHorizontal } from "lucide-react";
+import {useNavigate} from "react-router-dom"
 
 const PromptInput = ({onRunPrompt}) => {
 
   const [systemPrompt, setSystemPrompt] = useState("");
   const [prompt, setPrompt] = useState("");
+  const navigate = useNavigate();
 
   return (
     <section className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
@@ -74,7 +76,7 @@ const PromptInput = ({onRunPrompt}) => {
 
         <button
           type="button"
-          onClick={() => onRunPrompt({systemPrompt, prompt})}
+          onClick={() => navigate("/signup")}
           className="flex items-center gap-2 rounded-xl bg-gray-950 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-gray-800"
         >
           <Send size={16} />
