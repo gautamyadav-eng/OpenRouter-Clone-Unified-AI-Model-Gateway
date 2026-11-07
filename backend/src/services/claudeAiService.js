@@ -13,7 +13,15 @@ const claudeAIService = async(prompt, modelId,systemInstruction) => {
             content:prompt
         }]
     });
-    return response.content[0].text;
+      return {
+    response: response.content[0].text,
+    usage: {
+      inputTokens: response.usage.input_tokens,
+      outputTokens: response.usage.output_tokens,
+      totalTokens:
+        response.usage.input_tokens + response.usage.output_tokens,
+    },
+  };
 };
 
 export default claudeAIService;

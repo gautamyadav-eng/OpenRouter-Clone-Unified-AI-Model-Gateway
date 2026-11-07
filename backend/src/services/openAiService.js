@@ -12,7 +12,15 @@ const openAIService = async (prompt, modelId, systemInstruction) => {
         instructions: systemInstruction || undefined,
         input: prompt
     });
-    return response.output_text;
+     return {
+    response: response.content[0].text,
+    usage: {
+      inputTokens: response.usage.input_tokens,
+      outputTokens: response.usage.output_tokens,
+      totalTokens:
+        response.usage.input_tokens + response.usage.output_tokens,
+    },
+}
 };
 
 export default openAIService;

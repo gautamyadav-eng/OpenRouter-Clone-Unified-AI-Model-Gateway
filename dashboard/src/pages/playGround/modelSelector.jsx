@@ -1,4 +1,5 @@
-
+import { useEffect, useState } from "react";
+import axios from "axios";
 import {
   ChevronDown,
   Sparkles,
@@ -8,6 +9,25 @@ import {
 } from "lucide-react";
 
 const ModelSelector = ({selectedModel, onModelChange}) => {
+
+  const [models, setModels] = useState([]);
+const [loading, setLoading] = useState(true);
+
+useEffect(() => {
+  const fetchModels = async () => {
+    try {
+      const result = await axios.get("http://localhost:3000/api/models");
+
+      setModels(result.data.data.model);
+    } catch (error) {
+      console.error("Failed to fetch models:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchModels();
+}, []);
   return (
     <section className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm transition-all duration-300 hover:border-gray-300 hover:shadow-md sm:p-6">
 
@@ -36,14 +56,21 @@ const ModelSelector = ({selectedModel, onModelChange}) => {
           <div className="flex items-center justify-between rounded-xl border border-gray-200 bg-white px-4 py-3 transition-colors duration-200 hover:border-gray-400">
             <div className="flex items-center gap-3">
              
-             <select
+            <select
   value={selectedModel}
   onChange={(e) => onModelChange(e.target.value)}
-  className="w-full rounded-xl  bg-white px-4 py-3 text-sm font-semibold outline-none focus:border-violet-500"
+  disabled={loading}
+  className="w-full rounded-xl bg-white px-4 py-3 text-sm font-semibold outline-none focus:border-violet-500"
 >
-  <option value="Gemini">Gemini</option>
-  <option value="GPT">GPT</option>
-  <option value="Claude">Claude</option>
+  {loading ? (
+    <option>Loading models...</option>
+  ) : (
+    models.map((model) => (
+      <option key={model.modelId} value={model.name}>
+        {model.name}
+      </option>
+    ))
+  )}
 </select>
             </div>
             
@@ -63,11 +90,7 @@ const ModelSelector = ({selectedModel, onModelChange}) => {
             </div>
             <div>
               <p className="text-sm font-semibold text-gray-800">
-  {selectedModel === "Gemini"
-    ? "GeminiAI"
-    : selectedModel === "Claude"
-      ? "Anthropic"
-      : "OpenAI"}
+{models.find((model) => model.name === selectedModel)?.provider || "Loading..."}
 </p>
               <p className="mt-1 text-xs text-gray-500">
                 Selected model provider

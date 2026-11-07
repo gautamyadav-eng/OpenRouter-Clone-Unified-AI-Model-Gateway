@@ -34,12 +34,14 @@ const chatControllers =async (req, res) => {
 const responseTime = Date.now() -startTime;
 try{
 await RequestLog.create({
-    apiKeyId : req.apiKey._id,
+    apiKeyId: req.apiKey._id,
     provider: selectedModel.provider,
     model: selectedModel.modelId,
-    status:"success",
-    responseTime
-
+    status: "success",
+    responseTime,
+    inputTokens: result.usage.inputTokens,
+    outputTokens: result.usage.outputTokens,
+    totalTokens: result.usage.totalTokens
 });
 }catch(logError){
     console.log("Request log error", logError.message);

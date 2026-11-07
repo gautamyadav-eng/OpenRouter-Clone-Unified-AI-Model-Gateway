@@ -13,12 +13,18 @@ const getActivityLog = async(req, res) =>{
         apiKeyId: {$in: apiKeyIds},
     }).sort({createdAt: -1});
 
-    return res.status(200).json({
-        success:true,
-        message:"Activity logs fetched successfully",
-        totalRequests:logs.length,
-        logs,
-    });
+    const totalTokens = logs.reduce(
+  (total, log) => total + log.totalTokens,
+  0
+);
+
+  return res.status(200).json({
+  success: true,
+  message: "Activity logs fetched successfully",
+  totalRequests: logs.length,
+  totalTokens,
+  logs,
+});
 }catch(error){
     console.log("Activity logs error:",error.message);
 

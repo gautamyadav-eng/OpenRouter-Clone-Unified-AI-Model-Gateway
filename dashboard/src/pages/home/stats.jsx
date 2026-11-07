@@ -34,6 +34,7 @@ const Stats = () => {
   const [modelCount, setModelCount] = useState(0);
   const [apiKeyCount, setApiKeyCount] = useState(0);
   const [totalRequests, setTotalRequests] = useState(0);
+  const [totalTokens, setTotalTokens] = useState(0);
 
   useEffect(() => {
     const fetchModel = async () =>{
@@ -80,6 +81,7 @@ const Stats = () => {
 
         if(data.success){
           setTotalRequests(data.totalRequests);
+          setTotalTokens(data.totalTokens);
         }
       }catch(error){
         if(error.response?.status === 404){
@@ -104,7 +106,7 @@ const Stats = () => {
       return {...stat, value:totalRequests};
     }
       if(stat.title === "Tokens Used"){
-      return {...stat, value:"-"};
+      return {...stat, value: totalTokens.toLocaleString("en-IN"),};
     }
    
     return stat;

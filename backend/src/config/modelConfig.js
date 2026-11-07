@@ -13,7 +13,12 @@ const availableModels = [
       name:"Gemini",
         provider:"GeminiAI",
         modelId:"gemini-3.5-flash-lite" 
-    }
+    },
+   {
+  name: "Groq",
+  provider: "Groq",
+  modelId: "openai/gpt-oss-120b"
+}
   
 ];
 export default availableModels;

@@ -26,7 +26,19 @@ const requestLogSchema = new mongoose.Schema({
     createdAt:{
         type:Date,
         default:Date.now
-    }
+    },
+    inputTokens: {
+  type: Number,
+  default: 0,
+},
+outputTokens: {
+  type: Number,
+  default: 0,
+},
+totalTokens: {
+  type: Number,
+  default: 0,
+},
 });
 const RequestLog = mongoose.model("RequestLog", requestLogSchema);
 export default RequestLog;

@@ -16,7 +16,15 @@ const geminiAIService = async (prompt, modelId,systemInstruction ) => {
           systemInstruction:systemInstruction || undefined
         }
       });
-      return response.text;
+
+       return {
+  response: response.text,
+  usage: {
+    inputTokens: response.usageMetadata?.promptTokenCount ?? 0,
+    outputTokens: response.usageMetadata?.candidatesTokenCount ?? 0,
+    totalTokens: response.usageMetadata?.totalTokenCount ?? 0,
+  },
+};
     } catch (error) {
       const status = error.status ?? error.error?.code;
       const isRetryable = status === 429 || status === 500 || status === 503;

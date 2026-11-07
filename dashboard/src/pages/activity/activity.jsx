@@ -19,6 +19,8 @@ const ActivityPage = () => {
   const [logs, setLogs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [totalToken, setTotalTokens] = useState(0);
+  
  
 
   useEffect(() => {
@@ -27,6 +29,7 @@ const ActivityPage = () => {
         const data = await axios.get("http://localhost:3000/api/logs", {withCredentials:true});
 
         setLogs(data.data.logs || []);
+        setTotalTokens(data.data.totalTokens || []);
       }catch(error){
         console.log("Activity logs fetch error:",error);
         setError(error.response?.data?.message || "Failed to fetch activity logs");
@@ -115,7 +118,7 @@ const ActivityPage = () => {
               <span className="text-xs text-gray-400">TOKEN USAGE</span>
             </div>
             <p className="mt-5 text-sm text-gray-500">Tokens Used</p>
-            <h2 className="mt-1 text-3xl font-bold text-gray-900">-</h2>
+            <h2 className="mt-1 text-3xl font-bold text-gray-900">{totalToken}</h2>
             <p className="mt-2 text-xs text-gray-400">Sample token consumption</p>
           </div>
         </div>
