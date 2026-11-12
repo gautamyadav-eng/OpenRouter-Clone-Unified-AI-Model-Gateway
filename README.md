@@ -1,8 +1,5 @@
 # OpenRouter-Clone-Unified-AI-Model-Gateway
 
-
-# OpenRouter Clone – Frontend Application
-
 <div align="center">
 
 ### Unified AI Model Gateway
@@ -86,29 +83,9 @@ The following screenshots showcase the user interface and major functionalities 
 
 <!-- Replace with actual Home Page screenshot -->
 
-![Home Page](./screenshots/home.png)
+![Home Page](./screenShot/home.png)
 
-### 🔐 Login & Registration
 
-<!-- Replace with actual authentication screenshots -->
-
-![Login Page](./screenshots/login.png)
-
-![Registration Page](./screenshots/signup.png)
-
-### 🔑 Password Recovery
-
-<!-- Replace with actual password recovery screenshots -->
-
-![Forgot Password](./screenshots/forgot-password.png)
-
-### 🤖 AI Playground
-
-<!-- Replace with actual Playground screenshot -->
-
-![AI Playground](./screenshots/playground.png)
-
----
 
 ## ⚙️ Installation & Setup
 
