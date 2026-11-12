@@ -83,8 +83,7 @@ The following screenshots showcase the user interface and major functionalities 
 
 <!-- Replace with actual Home Page screenshot -->
 
-![Home Page](./screenShot/home.png)
-
+C:\Users\Gautam Yadav\OneDrive\Desktop\OpenRouter-Clone\frontend\screenShot\home.png
 
 
 ## ⚙️ Installation & Setup
