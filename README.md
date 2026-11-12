@@ -1,148 +1,173 @@
 # OpenRouter-Clone-Unified-AI-Model-Gateway
 
-# Frontend 
 
-A modern and responsive frontend application for OpenRouter Clone – Unified AI Model Gateway, built with React.js and Vite. It provides an intuitive interface for users to explore the platform, manage authentication, and interact with AI models through the playground.
+# OpenRouter Clone – Frontend Application
 
-✨ Features
+<div align="center">
 
-1. Home Page
+### Unified AI Model Gateway
 
-Modern landing page with a clean and responsive design.
+A modern, responsive, and user-friendly frontend application built to provide an intuitive interface for exploring AI models, managing user authentication, and interacting with AI through an integrated playground.
 
-Hero section introducing the AI Gateway platform.
+![React](https://img.shields.io/badge/React-2026-blue?logo=react)
+![Vite](https://img.shields.io/badge/Vite-Build_Tool-646CFF?logo=vite)
+![JavaScript](https://img.shields.io/badge/JavaScript-ES6%2B-yellow?logo=javascript)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-Styling-06B6D4?logo=tailwindcss)
 
-Overview of platform features and capabilities.
+</div>
 
-Supported AI models showcase.
+---
 
-How It Works section explaining the gateway workflow.
+## 📌 Overview
 
-Call-to-action sections for getting started.
+The Frontend Application is the user-facing interface of the OpenRouter Clone platform. It is developed using React.js and Vite to deliver a smooth and interactive user experience.
 
-2. Navigation
+It allows users to explore the platform, register and authenticate their accounts, recover passwords, and access the AI Playground to interact with available AI models.
 
-Responsive navigation bar.
+---
 
-Navigation links for different platform sections.
+## ✨ Features & Functionalities
 
-Login and Sign Up navigation.
+### 1. 🏠 Home Page
 
-Mobile-friendly navigation experience.
+- Modern landing page with a clean and professional UI.
+- Hero section introducing the AI Gateway platform.
+- Overview of platform features and capabilities.
+- Supported AI models showcase.
+- How It Works section explaining the gateway workflow.
+- Call-to-action sections for getting started.
 
-3. User Authentication
+### 2. 🧭 Navigation
 
-User registration and account creation.
+- Responsive navigation bar.
+- Navigation links for different platform sections.
+- Login and Sign Up navigation.
+- Mobile-friendly navigation experience.
 
-Secure user login.
+### 3. 🔐 User Authentication
 
-Forgot password functionality.
+- **User Registration:** Allows new users to create an account.
+- **User Login:** Provides account login functionality.
+- **Forgot Password:** Initiates the password recovery process.
+- **OTP Verification:** Verifies users through a 6-digit OTP.
+- **Password Reset:** Allows users to create a new password after verification.
+- Form validation and error handling.
 
-Email-based OTP verification.
+### 4. 🤖 AI Playground
 
-Password reset functionality.
+- Interactive interface for sending prompts to AI models.
+- Dynamic AI model selection using available models from the backend.
+- Prompt input for submitting user queries.
+- System instruction support for customizing AI responses.
+- Integration with the backend Chat API.
+- Display of AI-generated responses.
 
-Form validation and error handling.
+---
 
-4. AI Playground
+## 🛠️ Technology Stack
 
-Interactive interface for sending prompts to AI models.
+| Technology | Purpose |
+|---|---|
+| React.js | Component-based UI development |
+| Vite | Development server and build tool |
+| JavaScript | Application logic |
+| Tailwind CSS | Styling and responsive layouts |
+| React Router | Client-side navigation |
+| Axios | HTTP requests and API integration |
+| Lucide React | Interface icons |
 
-Dynamic AI model selection.
+---
 
-System instruction support.
+## 📸 Application Screenshots
 
-Integration with the backend chat API.
+The following screenshots showcase the user interface and major functionalities of the frontend application.
 
-Display of AI-generated responses.
+### 🏠 Home Page
 
-🛠️ Technology Stack
+<!-- Replace with actual Home Page screenshot -->
 
-Technology
+![Home Page](./screenshots/home.png)
 
-Purpose
+### 🔐 Login & Registration
 
-React.js
+<!-- Replace with actual authentication screenshots -->
 
-User interface development
+![Login Page](./screenshots/login.png)
 
-Vite
+![Registration Page](./screenshots/signup.png)
 
-Frontend development and build tool
+### 🔑 Password Recovery
 
-JavaScript
+<!-- Replace with actual password recovery screenshots -->
 
-Application logic
+![Forgot Password](./screenshots/forgot-password.png)
 
-Tailwind CSS
+### 🤖 AI Playground
 
-Styling and responsive layouts
+<!-- Replace with actual Playground screenshot -->
 
-React Router
+![AI Playground](./screenshots/playground.png)
 
-Client-side navigation
+---
 
-Axios
+## ⚙️ Installation & Setup
 
-HTTP requests and API integration
+Follow the steps below to run the frontend application locally.
 
-Lucide React
+### Prerequisites
 
-Interface icons
+- Node.js
+- npm
+- Backend server running
 
-📸 Screenshots
+### 1. Clone the Repository
 
-Home Page
-frontend/screenshots/image.png
+```bash
+git clone https://github.com/gautamyadav-eng/OpenRouter-Clone-Unified-AI-Model-Gateway.git
+```
 
-🚀 Getting Started
+### 2. Navigate to Frontend Directory
 
-Follow these steps to run the frontend application locally.
+```bash
+cd OpenRouter-Clone-Unified-AI-Model-Gateway/frontend
+```
 
-Prerequisites
+### 3. Install Dependencies
 
-Node.js
-
-npm
-
-Backend server running
-
-Installation
-
-1. Navigate to the frontend directory
-
-cd frontend
-
-2. Install dependencies
-
+```bash
 npm install
+```
 
-3. Start the development server
+### 4. Start Development Server
 
+```bash
 npm run dev
+```
 
-4. Open the application
+### 5. Access the Application
 
-http://localhost:5173
+Open the following URL in your browser:
 
-📁 Project Structure
+**http://localhost:5173**
 
-frontend/
-├── public/
-├── src/
-│   ├── components/
-│   ├── pages/
-│   ├── assets/
-│   ├── App.jsx
-│   └── main.jsx
-├── index.html
-├── package.json
-└── vite.config.js
+---
 
-Note: The project structure above is illustrative. Update it according to the actual frontend directory structure.
+## 🔗 Backend Integration
 
-🔗 Backend Integration
+The frontend communicates with the backend through REST APIs to provide the following functionalities:
 
-The frontend communicates with the backend REST APIs to support authentication, model fetching, and AI chat functionality.
+- User registration and authentication.
+- Password recovery and OTP verification.
+- Fetching available AI models.
+- Sending prompts to the AI Chat API.
+- Receiving and displaying AI-generated responses.
 
-Project: OpenRouter Clone – Unified AI Model Gateway
+---
+
+<div align="center">
+
+**OpenRouter Clone – Unified AI Model Gateway**
+
+*Frontend Application*
+
+</div>
